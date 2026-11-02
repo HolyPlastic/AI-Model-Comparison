@@ -12,7 +12,14 @@ Maintain a single interactive comparison of AI coding models available through O
 - Clickable table column headings to sort in both directions, with null values always last.
 - Provider multi-filter (OpenCode Go, ChatGPT Plus, Claude Max), model search, and benchmark filter.
 - Cost view toggle: combined blended cost versus separate input/output and relative cost columns.
-- CSV export; click-to-select model rows and selection toolbar with Use as baseline / Deselect.\n- Any model can become baseline; DeepSeek Flash is only the default. The baseline toggle controls relative score/cost coloring, and Go allowance has its own column visibility toggle.\n- Relative cost multipliers must use the selected model's available API rates, with missing or zero reference rates shown as unknown.\n- Higher benchmark scores and lower API prices are beneficial; relative coloring is neutral for equal/missing metrics.
+- Clickable row selection with Use as baseline, Pin/Unpin, and Deselect actions.
+- Any model may be baseline; DeepSeek Flash is merely the initial default. Baseline model remains available even if filtered out.
+- Advanced filter bar supports Model, Provider, Favourite, TB4, DeepSWE, API cost, input/output costs and Go allowance, with numerical comparisons and score presence.
+- Baseline-relative filters are inactive while baseline comparisons are off; do not silently evaluate against a disabled baseline. Cost diff multipliers are unknown when baseline is disabled or its price is unavailable.
+- Display settings: relative/absolute/off colouring, intensity, selectable columns, combined/separate costs, and CSV of displayed rows and columns.
+- Pinned models stay visible in the table and sort above regular rows, independent of other filters (unless favourites-only filtering is used).
+- Persist preferences with localStorage where browser permissions allow. Preserve offline/standalone operation.
+- Relative colours: higher benchmarks and lower API prices are beneficial; equal/missing values should be neutral.
 
 ## Accuracy and research
 - The initial dashboard is an *unverified working dataset* copied from a conversation on 2026-11-02, not an authoritative leaderboard. Previous conversations contained conflicting Go allowances and version identities. Validate facts before treating them as confirmed.

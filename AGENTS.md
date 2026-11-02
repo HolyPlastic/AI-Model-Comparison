@@ -12,14 +12,14 @@ Maintain a single interactive comparison of AI coding models available through O
 - Clickable table column headings to sort in both directions, with null values always last.
 - Provider multi-filter (OpenCode Go, ChatGPT Plus, Claude Max), model search, and benchmark filter.
 - Cost view toggle: combined blended cost versus separate input/output and relative cost columns.
-- CSV export. Compare relative cost against DeepSeek V4.1 Flash.
+- CSV export; click-to-select model rows and selection toolbar with Use as baseline / Deselect.\n- Any model can become baseline; DeepSeek Flash is only the default. The baseline toggle controls relative score/cost coloring, and Go allowance has its own column visibility toggle.\n- Relative cost multipliers must use the selected model's available API rates, with missing or zero reference rates shown as unknown.\n- Higher benchmark scores and lower API prices are beneficial; relative coloring is neutral for equal/missing metrics.
 
 ## Accuracy and research
 - The initial dashboard is an *unverified working dataset* copied from a conversation on 2026-11-02, not an authoritative leaderboard. Previous conversations contained conflicting Go allowances and version identities. Validate facts before treating them as confirmed.
 - Cite direct source links for exact benchmark version, model/checkpoint, evaluation harness, reasoning effort, date, API rates, cached-token rates and provider/model availability. Do not substitute benchmark variants or infer missing scores.
 - Keep subscription quota conceptually separate from reference API prices. Plus/Max usage is not billed at the displayed API rates. Claude Max subscription authentication is not officially supported in OpenCode; mark it as comparison-only where appropriate.
 - Go allowance figures are monthly dollar-equivalent usage caps, *not* extra charges.
-- 3:1 blended uncached reference price (USD per million combined tokens) = `(3*input + output)/4`. Relative blended cost is divided by Flash's blended price `$0.2625` using its off-peak rates. Never label this as Artificial Analysis's current cache-aware 7:2:1 price without supplying and verifying cached-input costs.
+- 3:1 blended uncached reference price (USD per million combined tokens) = `(3*input + output)/4`. Relative blended cost is divided by the chosen model's blended uncached reference price where available. The default DeepSeek Flash off-peak blended price is `$0.2625`. Never label this as Artificial Analysis's current cache-aware 7:2:1 price without supplying and verifying cached-input costs.
 - Record citations, verification status and retrieval dates for new or corrected rows.
 
 ## Workflow

@@ -8,9 +8,15 @@ This preview opens the latest committed HTML directly from the repository withou
 
 Download [ai-model-comparison.html](ai-model-comparison.html) and double-click to open it in a browser. No install, build, or server required.
 
-## Filters and controls
+## Filters, comparisons, favourites and display
 
-Use **+ Filter** to choose a field (Model, Provider, TB4 score, or DeepSWE), choose **is** / **is not**, then select one or more values. Multiple filter chips combine with AND; values inside a chip combine with OR. Remove chips with × or use Clear. Existing model search, sortable column headings, blended vs input/output cost, TB4 threshold, reset, and CSV export remain available.
+- **+ Filter:** add Provider, Model, Favourite, TB4, DeepSWE, API cost or Go allowance conditions. Metric operators include greater/less than, baseline-relative comparisons and missing scores. Multiple filters intersect; multiselected values within a choice filter combine as alternatives.
+- **Click a model row:** choose **Use as baseline**, **Pin/Unpin**, or **Deselect**. Pinned models remain visible and appear at the top of the table even when other filters would hide them. Use **Favourites only** to focus on pinned models.
+- **Baseline:** choose a reference from the selector or by row action. Turning comparison off disables baseline-relative filters and cost-difference multipliers.
+- **Display:** choose combined cost (labelled **Cost**) or input/output cost; show/hide columns, adjust relative/absolute/off colouring and intensity.
+- **Preferences:** saved locally in your browser. On another browser or device, settings and favourites do not automatically sync. **Reset view** restores defaults, including visible columns and baseline, without deleting favourites.
+- **CSV:** exports the currently displayed columns and rows, including pinned models.
+- **Sorting:** click a column heading; click again to reverse. Missing scores sort last.
 
 **Important:** The dataset is a working draft containing unverified claims. API price references are *not* ChatGPT Plus or Claude Max subscription charges. See [AGENTS.md](AGENTS.md) for verification and maintenance instructions.
 

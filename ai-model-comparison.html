@@ -32,7 +32,7 @@ const baselineRow=()=>data.find(r=>r.name===baselineName)||data.find(r=>r.name==
 const blend=r=>r.input==null||r.output==null?null:(3*r.input+r.output)/4;
 function raw(r,k){return k==='blend'?blend(r):r[k]}
 const ratioKey={ratio:'blend',ix:'input',ox:'output'};
-function v(r,k){const target=ratioKey[k];if(!target)return raw(r,k);const x=raw(r,target),b=raw(baselineRow(),target);return x==null||b==null||b<=0?null:x/b}
+function v(r,k){const target=ratioKey[k];if(!target)return raw(r,k);const x=raw(r,target),b=raw(baselineRow(),target);return !$('baselineOn').checked||x==null||b==null||b<=0?null:x/b}
 function fmt(r,k){const x=v(r,k);if(x==null)return '—';if(['tb','swe'].includes(k))return x.toFixed(1);if(['ratio','ix','ox'].includes(k))return x.toFixed(2)+'×';if(['blend','input','output'].includes(k))return '$'+parseFloat(x.toFixed(4));if(k==='allow')return '$'+x;return String(x)}
 function allCols(){return [['name','Model'],['provider','Provider'],['tb','TB4'],['swe','DeepSWE'],...($('mode').value==='blended'?[['blend','Cost'],['ratio','Cost diff']]:[['input','Input cost'],['output','Output cost'],['ix','Input diff'],['ox','Output diff']]),['allow','Go allowance']]}
 function cols(){return allCols().filter(([k])=>columnVisibility[k]!==false)}
@@ -52,11 +52,11 @@ if(f.operator==='below baseline'||f.operator==='less than')return x<y;
 if(f.operator==='equal to')return x===y;
 if(f.operator==='cheaper than baseline')return x<y;
 if(f.operator==='more expensive than baseline')return x>y;
-if(f.operator==='at least % cheaper')return y>0&&(y-x)/y*100>=Number(f.values[0]);
-if(f.operator==='at least % more expensive')return y>0&&(x-y)/y*100>=Number(f.values[0]);
+if(f.operator==='at least % cheaper')return y>0&&Number.isFinite(Number(f.values[0]))&&(y-x)/y*100>=Number(f.values[0]);
+if(f.operator==='at least % more expensive')return y>0&&Number.isFinite(Number(f.values[0]))&&(x-y)/y*100>=Number(f.values[0]);
 return true
 }
-function filterEnabled(f){return $('baselineOn').checked||!f.operator.includes('baseline')&&!f.operator.includes('% cheaper')&&!f.operator.includes('% more expensive')}
+function filterEnabled(f){return $('baselineOn').checked||(!f.operator.includes('baseline')&&!f.operator.includes('% cheaper')&&!f.operator.includes('% more expensive'))}
 function current(){const q=$('search').value.toLowerCase().trim(),onlyPins=$('onlyPins').checked;return data.filter(r=>(!onlyPins||pins.has(r.name))&&(pins.has(r.name)||(r.name.toLowerCase().includes(q)&&activeFilters.every(f=>!f.values.length||!filterEnabled(f)||compareFilter(r,f))))).sort((a,b)=>{const ap=pins.has(a.name),bp=pins.has(b.name);if(ap!==bp)return ap?-1:1;const x=v(a,sort),y=v(b,sort);if(x==null)return y==null?0:1;if(y==null)return -1;const cmp=typeof x==='string'?x.localeCompare(y):x-y;return desc?-cmp:cmp})}
 function comparisonStyle(r,k){
 const mode=$('colourMode').value,enabled=$('baselineOn').checked,intensityScale=Number($('colourIntensity').value)/100;
@@ -84,7 +84,7 @@ for(const f of activeFilters){const field=filterFields.find(x=>x.id===f.field);i
 chip.append(btn(field.label,b=>menu(b,filterFields.map(x=>x.label),[field.label],label=>{const next=filterFields.find(x=>x.label===label);f.field=next.id;f.operator=next.type==='choice'?'is':'above baseline';f.values=[];drawFilters();render()})));
 chip.append(btn(f.operator,b=>menu(b,ops(f),[f.operator],op=>{f.operator=op;f.values=[];drawFilters();render()})));
 const noValue=['has score','is missing','above baseline','below baseline'].includes(f.operator);const percent=f.operator.startsWith('at least %');
-if(!noValue){if(isNumeric(f)){const input=document.createElement('input');input.type='number';input.step='any';input.placeholder=percent?'Percent':'Value';input.setAttribute('aria-label',field.label+' filter value');input.style.width='90px';input.value=f.values[0]||'';input.oninput=()=>{f.values=input.value===''?[]:[input.value];render()};chip.append(input)}else{const summary=()=>f.values.length===0?'Select…':f.values.length<=2?f.values.join(', '):f.values[0]+' +'+(f.values.length-1);chip.append(btn(summary(),b=>menu(b,field.options,[...f.values],value=>{f.values=f.values.includes(value)?f.values.filter(x=>x!==value):[...f.values,value];b.textContent=summary();render()},true)))}}else f.values=['_'];
+if(!noValue){if(isNumeric(f)){const input=document.createElement('input');input.type='number';input.step='any';input.placeholder=percent?'Percent':'Value';input.setAttribute('aria-label',field.label+' filter value');input.style.width='90px';input.value=f.values[0]==='_'?'':(f.values[0]||'');input.oninput=()=>{f.values=input.value===''?[]:[input.value];render()};chip.append(input)}else{const summary=()=>f.values.length===0?'Select…':f.values.length<=2?f.values.join(', '):f.values[0]+' +'+(f.values.length-1);chip.append(btn(summary(),b=>menu(b,field.options,[...f.values],value=>{f.values=f.values.includes(value)?f.values.filter(x=>x!==value):[...f.values,value];b.textContent=summary();render()},true)))}}else f.values=['_'];
 const remove=btn('×',()=>{activeFilters=activeFilters.filter(x=>x.id!==f.id);closePop();drawFilters();render()});remove.setAttribute('aria-label','Remove '+field.label+' filter');chip.append(remove);root.append(chip)}
 root.append(btn('+ Filter',b=>menu(b,filterFields.map(x=>x.label),[],label=>{const field=filterFields.find(x=>x.label===label);activeFilters.push({id:++seq,field:field.id,operator:field.type==='choice'?'is':'above baseline',values:field.type==='choice'?[]:['_']});drawFilters();render();const controls=root.querySelectorAll('.fc');const last=controls[controls.length-1];last?.querySelector('.fc button:nth-child(3)')?.click()})));
 if(activeFilters.length)root.append(btn('Clear',()=>{activeFilters=[];closePop();drawFilters();render()}));

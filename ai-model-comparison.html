@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Model Comparison</title><style>
-:root{color-scheme:dark;--bg:#0b0f17;--panel:#151d2b;--border:#303b4f;--muted:#b5c0d0;--text:#eef2fb;--accent:#87b8ff;--green:#82e0b3;--warn:#facb69;--bad:#ff9c9c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,Segoe UI,Arial;padding:28px 20px}main{max-width:1500px;margin:auto}h1{font-size:26px;margin:0}p{color:var(--muted)}.bar{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin:18px 0}.field{display:flex;flex-direction:column;gap:5px}.field>label{font-weight:700;font-size:12px;color:var(--muted)}button,input,select{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 11px;font:inherit}button{cursor:pointer}button:hover{background:#25334a}input[type=search]{min-width:200px}.checks{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:9px;display:flex;flex-wrap:wrap;gap:12px}.checks label{white-space:nowrap;cursor:pointer}.checks input{accent-color:var(--accent)}.tablewrap{overflow:auto;border-radius:10px;border:1px solid var(--border);background:var(--panel)}table{border-collapse:collapse;min-width:100%;white-space:nowrap;font-variant-numeric:tabular-nums}th,td{padding:10px 12px;border-bottom:1px solid #283446;text-align:right}th{background:#202b3d;position:sticky;top:0}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}th button{border:0;background:transparent;font-size:12px;font-weight:700;padding:0}tr:hover td{background:#202b3d}td:first-child{font-weight:650}.positive{color:var(--green)}.note{color:var(--muted);font-size:12px;max-width:1100px;margin-top:13px}a{color:var(--accent)}#status{color:var(--muted);margin:10px 0;font-size:12px}@media(max-width:700px){body{padding:12px 8px}h1{font-size:21px}td,th{padding:8px}}
+:root{color-scheme:dark;--bg:#0b0f17;--panel:#151d2b;--border:#303b4f;--muted:#b5c0d0;--text:#eef2fb;--accent:#87b8ff;--green:#82e0b3;--warn:#facb69;--bad:#ff9c9c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,Segoe UI,Arial;padding:28px 20px}main{max-width:none;margin:0 auto}h1{font-size:26px;margin:0}p{color:var(--muted)}.bar{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin:18px 0}.field{display:flex;flex-direction:column;gap:5px}.field>label{font-weight:700;font-size:12px;color:var(--muted)}button,input,select{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 11px;font:inherit}button{cursor:pointer}button:hover{background:#25334a}input[type=search]{min-width:200px}.checks{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:9px;display:flex;flex-wrap:wrap;gap:12px}.checks label{white-space:nowrap;cursor:pointer}.checks input{accent-color:var(--accent)}.tablewrap{overflow:auto;border-radius:10px;border:1px solid var(--border);background:var(--panel)}table{border-collapse:collapse;min-width:100%;white-space:nowrap;font-variant-numeric:tabular-nums}th,td{padding:10px 12px;border-bottom:1px solid #283446;text-align:right}th{background:#202b3d;position:sticky;top:0}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}th button{border:0;background:transparent;font-size:12px;font-weight:700;padding:0}tr:hover td{background:#202b3d}td:first-child{font-weight:650}.positive{color:var(--green)}.note{color:var(--muted);font-size:12px;max-width:1100px;margin-top:13px}a{color:var(--accent)}#status{color:var(--muted);margin:10px 0;font-size:12px}@media(max-width:700px){body{padding:12px 8px}h1{font-size:21px}td,th{padding:8px}}
 .fb{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.fc{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}.fc button{border:0;border-radius:0}.fc button+button{border-left:1px solid var(--border)}.fpop{position:fixed;z-index:200;background:#202c40;border:1px solid #5d6d84;border-radius:8px;padding:6px;box-shadow:0 16px 40px #0009;min-width:220px}.fpop input{width:100%}.fpop button{display:block;width:100%;text-align:left;border:0;background:transparent}.fpop button:hover{background:#34465e}.fpop .options{max-height:260px;overflow:auto}
 
 tr[data-model]{cursor:pointer}tr[data-model]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}tr.is-selected td{background:#243e5c!important}tr.is-baseline td:first-child{box-shadow:inset 4px 0 var(--accent)}.selectionbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:10px 12px;border:1px solid #4c6485;background:#192a40;border-radius:9px}.selectionbar[hidden]{display:none}.selectionbar strong{color:#d7e9ff}.comparison-note{font-size:12px;color:var(--muted);margin:7px 0}.comparecell{font-weight:650;font-variant-numeric:tabular-nums}
@@ -16,11 +16,16 @@ tr[data-model]{cursor:pointer}tr[data-model]:focus-visible{outline:2px solid var
 .livebar .spacer{margin-left:auto}
 
 /* ── fold-out columns ─────────────────────────────────────────────── */
-th.mc-th{position:relative}
-th.mc-th--group .mc-fold{border:0;background:transparent;padding:0 2px;color:var(--accent);font-size:11px;line-height:1}
-th.mc-th--group .mc-fold:hover{background:transparent;color:#fff}
+th.mc-th{position:relative;padding:0;text-align:left;vertical-align:top;min-width:112px}
+th.mc-th:first-child{min-width:170px}
+th.mc-th--sub{min-width:96px}
+.mc-th-top{display:flex;align-items:stretch;min-height:40px}
+.mc-sort{flex:1 1 auto;display:flex;align-items:center;justify-content:flex-start;gap:4px;padding:10px 12px;background:transparent;border:0;border-radius:0;cursor:pointer;color:var(--text);font-size:12px;font-weight:700;white-space:nowrap;text-align:left}
+.mc-sort:hover{background:#2a3a52}
+.mc-fold{flex:0 0 15%;min-width:26px;max-width:46px;display:flex;align-items:center;justify-content:center;background:transparent;border:0;border-left:1px solid #33435b;border-radius:0;cursor:pointer;color:var(--accent);font-size:12px;padding:0}
+.mc-fold:hover{background:#31435e;color:#fff}
 th.mc-th--sub{background:#1a2434;font-weight:600;color:var(--muted)}
-th.mc-th--sub button{font-size:11px;font-weight:600;color:var(--muted)}
+th.mc-th--sub .mc-sort{font-size:11px;font-weight:600;color:var(--muted)}
 td.mc-sub{background:#131c29;font-size:13px}
 tr:hover td.mc-sub{background:#1b2637}
 .mc-nomatch{color:var(--warn);cursor:help;font-size:11px;margin-left:6px}
@@ -36,22 +41,20 @@ tr:hover td.mc-sub{background:#1b2637}
 .card-body[hidden]{display:none}
 
 /* ── header help: short line in the header, full text on hover ─────── */
-.mc-hint{display:block;white-space:normal;width:150px;font-size:10.5px;line-height:1.3;font-weight:500;color:#8fa0b8;margin-top:4px;letter-spacing:0;text-transform:none;text-align:left}
-th.mc-th--sub .mc-hint{width:110px}
-th.mc-th--group .mc-hint{width:130px}
+.mc-hint{display:block;white-space:normal;max-width:none;font-size:10px;line-height:1.35;font-weight:500;color:#8fa0b8;padding:0 10px 9px;letter-spacing:0;text-transform:none;text-align:left;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
 #tip{position:fixed;z-index:400;max-width:370px;max-height:60vh;overflow:hidden;background:#0e1622;border:1px solid #4a5a72;border-radius:9px;padding:9px 11px;box-shadow:0 18px 44px #000c;font-size:12px;line-height:1.45;color:#dbe4f2;pointer-events:none;display:none}
 #tip[data-show="1"]{display:block}
 #tip .tip-src{display:block;margin-top:7px;padding-top:6px;border-top:1px solid #2a3547;font-size:10.5px;color:#8fa0b8}
 #tip .tip-mine{margin-top:6px;padding-top:6px;border-top:1px solid #2a3547;font-size:10.5px;color:#e8cf8f}
 </style></head><body><main><h1>📊 AI Model Comparison</h1><p>OpenCode Go · ChatGPT Plus · Claude Max · live scores from Artificial Analysis and OpenRouter</p>
 
-<div class="livebar" id="livebar"><span class="dot" id="liveDot"></span><span id="liveText">Live numbers not loaded yet</span><span class="sep"></span><span id="liveCounts"></span><span class="spacer"></span><button id="refresh" title="Re-fetch Artificial Analysis and OpenRouter now">↻ Refresh live</button></div>
+<div class="livebar" id="livebar"><span class="dot" id="liveDot"></span><span id="liveText">Live numbers not loaded yet</span><span class="sep"></span><span id="liveCounts"></span><span class="spacer"></span><button id="refresh" data-tip="Re-fetch Artificial Analysis, OpenRouter, Terminal-Bench and DeepSWE now">↻ Refresh live</button></div>
 
 <div class="card-row">
 <section class="controls-section" data-card="filters"><h2 class="card-head"><button type="button" aria-expanded="true">🔎 Filters<span class="chev">▾</span></button></h2><div class="card-body"><div class="control-row"><label for="search">Search <input id="search" type="search" placeholder="Search models…"></label><button id="clearFilters">Clear filters</button><label><input type="checkbox" id="onlyPins"> Favourites only</label><label><input type="checkbox" id="includeAll"> Include models not in my list</label></div><div id="filters" class="fb" role="toolbar" aria-label="Model filters"></div></div></section>
 <section class="controls-section" data-card="comparison"><h2 class="card-head"><button type="button" aria-expanded="true">🎯 Comparison<span class="chev">▾</span></button></h2><div class="card-body"><div class="control-row"><label>Baseline <select id="baseSelect" aria-label="Choose baseline model"></select></label></div><div class="control-row" style="margin-top:8px"><label><input type="checkbox" id="baselineOn" checked> Compare to baseline</label></div><p class="small" style="margin:8px 0 0">The baseline model stays available even when filtered out.</p></div></section>
 </div>
-<section class="controls-section" data-card="display"><h2 class="card-head"><button type="button" aria-expanded="true">🎨 Display<span class="chev">▾</span></button></h2><div class="card-body"><div class="control-row"><label>Colour <select id="colourMode"><option value="relative">Relative to baseline</option><option value="absolute">Absolute score gradients</option><option value="none">Off</option></select></label><label>Intensity <input id="colourIntensity" type="range" min="0" max="100" value="65" step="5"><output id="intensityLabel">65%</output></label><button id="columnsToggle" aria-expanded="false">☷ Columns</button><button id="helpToggle" aria-pressed="false" title="Show a one-line description under each column heading">ⓘ Column help</button><div id="colsMenu" hidden></div><button id="reset">↺ Reset view</button><button id="csv">↓ CSV export</button></div><p class="legend">Green = better, red = worse. Higher benchmark scores and lower API prices are better. Go allowance is not colour-ranked. Any column with a ▸ next to its name opens into more columns. Hover any heading for the full description.</p></div></section>
+<section class="controls-section" data-card="display"><h2 class="card-head"><button type="button" aria-expanded="true">🎨 Display<span class="chev">▾</span></button></h2><div class="card-body"><div class="control-row"><label>Colour <select id="colourMode"><option value="relative">Relative to baseline</option><option value="absolute">Absolute score gradients</option><option value="none">Off</option></select></label><label>Intensity <input id="colourIntensity" type="range" min="0" max="100" value="65" step="5"><output id="intensityLabel">65%</output></label><button id="columnsToggle" aria-expanded="false">☷ Columns</button><button id="helpToggle" aria-pressed="false" data-tip="Show a one-line description under every column heading&#10;The full explanation is always on hover, and each line names the source it comes from">ⓘ Column help</button><div id="colsMenu" hidden></div><button id="reset">↺ Reset view</button><button id="csv">↓ CSV export</button></div><p class="legend">Green = better, red = worse. Higher benchmark scores and lower API prices are better. Go allowance is not colour-ranked. Click a heading to sort by it; the strip on its right edge opens it into more columns. Hover any heading for the full description.</p></div></section>
 <div id="selectionbar" class="selectionbar" hidden><strong id="selectedLabel"></strong><button id="setBase">◎ Use as baseline</button><button id="pinSelected">☆ Pin model</button><button id="clearSelection">× Deselect</button></div><div id="baselineInfo" class="comparison-note"></div><div id="status"></div><div class="tablewrap"><table><thead id="head"></thead><tbody id="body"></tbody></table></div>
 <p class="note"><b>Working data, not verified:</b> TB4, DeepSWE, provider and Go allowance are transcribed from earlier research and are NOT independently verified here. Live columns (Intel, Engineering, Context, Max output, tok/s, TTFT, price) come from the sources named in each column heading at the moment shown in the live bar. Where a live price exists it takes over from the hand-entered price, and the cell says so on hover.</p>
 <p class="note"><b>Cost:</b> Combined = (3 × input + output) / 4 USD per million tokens, an uncached 3:1 blend. Relative cost multipliers use the selected baseline's price; lower is cheaper. Plus/Max API reference prices are NOT additional subscription charges. Go allowances are dollar-equivalent monthly quotas, not extra charges.</p>
@@ -182,7 +185,7 @@ async function loadHelp(){
   }catch(e){
     HELP={};helpOn=false;
     $('helpToggle').disabled=true;
-    $('helpToggle').title='Column help needs the local helper (benchmarks.json is served by it)';
+    $('helpToggle').dataset.tip='Column help needs the local helper\nbenchmarks.json is served by the helper, not by the file on disk';
   }
   $('helpToggle').setAttribute('aria-pressed',String(helpOn));
   $('helpToggle').classList.toggle('on',helpOn);
@@ -412,20 +415,42 @@ const helpSource=k=>{const h=HELP[k];return h?[h.source,h.url].filter(Boolean).j
 
 function render(){
  const columns=visibleColumns();
- if(!columns.some(c=>c.key===sort)){sort='tb';desc=true}
+ // A group column sorts by its primary value key, which is not the group's own
+ // key, so the guard has to compare resolved keys. Comparing raw keys silently
+ // reset every attempt to sort by an expandable column back to TB4.
+ if(!columns.some(c=>vkey(c.key)===sort)){sort='tb';desc=true}
  const head=$('head');head.replaceChildren();const tr=document.createElement('tr');
  for(const c of columns){
    const th=document.createElement('th');th.className='mc-th'+(c.sub?' mc-th--sub':'')+(c.group?' mc-th--group':'');
    const k=vkey(c.key),active=sort===k;
-   const b=document.createElement('button');b.textContent=c.label+(active?(desc?' ↓':' ↑'):'');
-   b.onclick=()=>{if(active)desc=!desc;else{sort=k;desc=!['name','provider'].includes(k)}render()};
-   th.append(b);
-   if(helpOn&&k!=='name'&&HELP[k]&&HELP[k].short){const hint=document.createElement('span');hint.className='mc-hint';hint.textContent=HELP[k].short;th.append(hint)}
+   const top=document.createElement('div');top.className='mc-th-top';
+
+   // The whole header cell sorts; only the narrow strip on the right folds the
+   // column open. Before this the label was the only clickable part, so a wide
+   // header with a description under it looked unclickable.
+   const b=document.createElement('button');b.type='button';b.className='mc-sort';
+   b.textContent=c.label+(active?(desc?' ↓':' ↑'):'');
+   b.setAttribute('aria-label','Sort by '+c.label);
+   top.append(b);
+
    if(c.group){
-     const f=document.createElement('button');f.className='mc-fold';f.textContent=c.open?'▾':'▸';f.setAttribute('aria-expanded',String(c.open));f.setAttribute('aria-label',(c.open?'Collapse ':'Expand ')+c.label+' into more columns');
+     const f=document.createElement('button');f.type='button';f.className='mc-fold';f.textContent=c.open?'▾':'▸';
+     f.setAttribute('aria-expanded',String(c.open));
+     f.setAttribute('aria-label',(c.open?'Collapse ':'Expand ')+c.label+' into more columns');
+     f.dataset.tip=(c.open?'Collapse ':'Expand ')+c.label+' into '+c.subs.filter(s=>s!==c.primary).map(s=>SUB_META[s]?.[0]||s).join(', ');
      f.onclick=e=>{e.stopPropagation();c.open?expanded.delete(c.key):expanded.add(c.key);render()};
-     th.append(f);
+     top.append(f);
    }
+   th.append(top);
+
+   th.onclick=e=>{
+     if(e.target.closest('.mc-fold'))return;
+     hideTip();
+     if(active)desc=!desc;else{sort=k;desc=!['name','provider'].includes(k)}
+     render();
+   };
+
+   if(helpOn&&k!=='name'&&HELP[k]&&HELP[k].short){const hint=document.createElement('span');hint.className='mc-hint';hint.textContent=HELP[k].short;th.append(hint)}
    const htip=headerTip(k);if(htip)th.dataset.tip=htip;
    tr.append(th);
  }
@@ -501,7 +526,7 @@ $('clearSelection').onclick=()=>{selectedName=null;render()};
 $('columnsToggle').onclick=()=>{const m=$('colsMenu');m.hidden=!m.hidden;$('columnsToggle').setAttribute('aria-expanded',String(!m.hidden))};
 $('helpToggle').onclick=()=>{helpOn=!helpOn;$('helpToggle').setAttribute('aria-pressed',String(helpOn));$('helpToggle').classList.toggle('on',helpOn);render()};
 $('clearFilters').onclick=()=>{$('search').value='';$('onlyPins').checked=false;activeFilters=[];redraw()};
-$('reset').onclick=()=>{$('search').value='';$('baselineOn').checked=true;$('colourMode').value='relative';$('colourIntensity').value=65;$('onlyPins').checked=false;$('includeAll').checked=false;baselineName=defaultBaseline;$('baseSelect').value=baselineName;selectedName=null;activeFilters=[];expanded.clear();collapsed.clear();helpOn=false;$('helpToggle').setAttribute('aria-pressed','false');$('helpToggle').classList.remove('on');applyCards();for(const k of ALL_KEYS)columnVisibility[k]=true;sort='tb';desc=true;redraw()};
+$('reset').onclick=()=>{$('search').value='';$('baselineOn').checked=true;$('colourMode').value='relative';$('colourIntensity').value=65;$('onlyPins').checked=false;$('includeAll').checked=false;baselineName=defaultBaseline;$('baseSelect').value=baselineName;selectedName=null;activeFilters=[];expanded.clear();collapsed.clear();helpOn=true;$('helpToggle').setAttribute('aria-pressed','true');$('helpToggle').classList.add('on');applyCards();for(const k of ALL_KEYS)columnVisibility[k]=true;sort='tb';desc=true;redraw()};
 for(const id of ['search','baselineOn','onlyPins','colourMode','colourIntensity'])$(id).addEventListener('input',()=>{if(id==='baselineOn')drawFilters();render()});
 $('includeAll').addEventListener('input',()=>{drawBaseSelect();render()});
 $('refresh').onclick=()=>loadLive(true);

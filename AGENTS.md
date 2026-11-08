@@ -50,6 +50,8 @@ One normaliser, plus a second key with the vendor or family prefix removed, beca
 - Clickable table column headings to sort in both directions, with null values always last.
 - **Live wins, hand-kept data is the fallback**: TB4 and DeepSWE show the live row when one matches the model, and my hand-entered figure when none does. The cell tooltip always names which it is, the agent or harness, the effort, and the date, and quotes my figure when the two disagree.
 - Provider multi-filter (OpenCode Go, ChatGPT Plus, Claude Max), model search, and benchmark filter.
+- **Header interaction**: clicking anywhere in a header cell sorts by that column; the strip on the right edge of the cell (about 15% of its width, separated by a border) folds the column open. Do not make the label the only clickable part: a wide header with a description under it then looks unclickable, which is exactly the bug that made expandable columns feel unsortable.
+- **A group column sorts by its primary value key**, not by the group key, so the "is this sort key still visible" guard must compare resolved keys (`vkey`). Comparing raw keys silently reset every attempt to sort by an expandable column back to TB4.
 - **Fold-out columns**: a group header expands in place into its sub-columns. The parent shows the primary value, so the primary is never repeated as a sub-column (that repeat is what made earlier expandable columns read as ghost columns). Fold state persists.
 - Clickable row selection with Use as baseline, Pin/Unpin, and Deselect actions.
 - Any model may be baseline; DeepSeek Flash is merely the initial default. Baseline model remains available even if filtered out.

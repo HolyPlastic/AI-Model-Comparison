@@ -40,7 +40,7 @@ The free Artificial Analysis tier carries no coding or agentic index, which is w
 - **Include models not in my list** adds every scored model from Artificial Analysis that my list does not cover (in italics).
 - **Preferences:** saved locally in your browser. On another browser or device, settings and favourites do not automatically sync. **Reset view** restores defaults, including visible columns, folds and baseline, without deleting favourites.
 - **CSV:** exports the currently displayed columns and rows, including pinned models.
-- **Sorting:** click a column heading; click again to reverse. Missing scores sort last.
+- **Sorting:** click anywhere in a column heading; click again to reverse. The strip on the heading's right edge is not a sort control: it folds the column open. Missing scores sort last.
 
 **Important:** TB4, DeepSWE, provider and Go allowance are a working draft containing unverified claims. API price references are *not* ChatGPT Plus or Claude Max subscription charges. See [AGENTS.md](AGENTS.md) for verification and maintenance instructions.
 

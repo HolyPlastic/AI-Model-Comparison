@@ -1,0 +1,7 @@
+# the live cache and local run noise
+.cache/
+_server.log
+_dom.html
+_debug.html
+_live.json
+_chrome*.log

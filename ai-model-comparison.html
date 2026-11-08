@@ -1,83 +1,251 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI Model Comparison</title><style>
-:root{color-scheme:dark;--bg:#0b0f17;--panel:#151d2b;--border:#303b4f;--muted:#b5c0d0;--text:#eef2fb;--accent:#87b8ff;--green:#82e0b3}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,Segoe UI,Arial;padding:28px 20px}main{max-width:1500px;margin:auto}h1{font-size:26px;margin:0}p{color:var(--muted)}.bar{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin:18px 0}.field{display:flex;flex-direction:column;gap:5px}.field>label{font-weight:700;font-size:12px;color:var(--muted)}button,input,select{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 11px;font:inherit}button{cursor:pointer}button:hover{background:#25334a}input[type=search]{min-width:200px}.checks{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:9px;display:flex;flex-wrap:wrap;gap:12px}.checks label{white-space:nowrap;cursor:pointer}.checks input{accent-color:var(--accent)}.tablewrap{overflow:auto;border-radius:10px;border:1px solid var(--border);background:var(--panel)}table{border-collapse:collapse;min-width:100%;white-space:nowrap;font-variant-numeric:tabular-nums}th,td{padding:10px 12px;border-bottom:1px solid #283446;text-align:right}th{background:#202b3d;position:sticky;top:0}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}th button{border:0;background:transparent;font-size:12px;font-weight:700;padding:0}tr:hover td{background:#202b3d}td:first-child{font-weight:650}.positive{color:var(--green)}.note{color:var(--muted);font-size:12px;max-width:1100px;margin-top:13px}a{color:var(--accent)}#status{color:var(--muted);margin:10px 0;font-size:12px}@media(max-width:700px){body{padding:12px 8px}h1{font-size:21px}td,th{padding:8px}}
+:root{color-scheme:dark;--bg:#0b0f17;--panel:#151d2b;--border:#303b4f;--muted:#b5c0d0;--text:#eef2fb;--accent:#87b8ff;--green:#82e0b3;--warn:#facb69;--bad:#ff9c9c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,Segoe UI,Arial;padding:28px 20px}main{max-width:1500px;margin:auto}h1{font-size:26px;margin:0}p{color:var(--muted)}.bar{display:flex;flex-wrap:wrap;align-items:end;gap:12px;margin:18px 0}.field{display:flex;flex-direction:column;gap:5px}.field>label{font-weight:700;font-size:12px;color:var(--muted)}button,input,select{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 11px;font:inherit}button{cursor:pointer}button:hover{background:#25334a}input[type=search]{min-width:200px}.checks{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:9px;display:flex;flex-wrap:wrap;gap:12px}.checks label{white-space:nowrap;cursor:pointer}.checks input{accent-color:var(--accent)}.tablewrap{overflow:auto;border-radius:10px;border:1px solid var(--border);background:var(--panel)}table{border-collapse:collapse;min-width:100%;white-space:nowrap;font-variant-numeric:tabular-nums}th,td{padding:10px 12px;border-bottom:1px solid #283446;text-align:right}th{background:#202b3d;position:sticky;top:0}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}th button{border:0;background:transparent;font-size:12px;font-weight:700;padding:0}tr:hover td{background:#202b3d}td:first-child{font-weight:650}.positive{color:var(--green)}.note{color:var(--muted);font-size:12px;max-width:1100px;margin-top:13px}a{color:var(--accent)}#status{color:var(--muted);margin:10px 0;font-size:12px}@media(max-width:700px){body{padding:12px 8px}h1{font-size:21px}td,th{padding:8px}}
 .fb{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.fc{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}.fc button{border:0;border-radius:0}.fc button+button{border-left:1px solid var(--border)}.fpop{position:fixed;z-index:200;background:#202c40;border:1px solid #5d6d84;border-radius:8px;padding:6px;box-shadow:0 16px 40px #0009;min-width:220px}.fpop input{width:100%}.fpop button{display:block;width:100%;text-align:left;border:0;background:transparent}.fpop button:hover{background:#34465e}.fpop .options{max-height:260px;overflow:auto}
 
 tr[data-model]{cursor:pointer}tr[data-model]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}tr.is-selected td{background:#243e5c!important}tr.is-baseline td:first-child{box-shadow:inset 4px 0 var(--accent)}.selectionbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:10px 12px;border:1px solid #4c6485;background:#192a40;border-radius:9px}.selectionbar[hidden]{display:none}.selectionbar strong{color:#d7e9ff}.comparison-note{font-size:12px;color:var(--muted);margin:7px 0}.comparecell{font-weight:650;font-variant-numeric:tabular-nums}
 
 .controls-section{margin:12px 0;padding:12px;border:1px solid var(--border);border-radius:10px;background:#111b29}.controls-section h2{font-size:12px;letter-spacing:.07em;color:var(--muted);margin:0 0 9px;text-transform:uppercase}.control-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.control-row label{display:inline-flex;align-items:center;gap:6px}.control-row input[type=range]{width:120px;accent-color:var(--accent)}.control-row select{max-width:240px}.small{font-size:12px;color:var(--muted)}.selectgroup{display:flex;gap:6px;flex-wrap:wrap}.selectgroup label{background:var(--panel);border:1px solid var(--border);padding:5px 8px;border-radius:7px}.pinned td:first-child{box-shadow:inset 3px 0 #facb69}.star{color:#facb69;margin-right:5px}.controls-section button{padding:7px 10px}.fc button{padding:7px 9px}.filtervalue{font-weight:650}.fpop input{margin-bottom:6px}.mutedfilter{opacity:.6}.legend{font-size:12px;color:var(--muted)}.starbtn{padding:0 5px;background:transparent;border:0;color:#facb69}.selectionbar button{padding:7px 10px}#colsMenu{position:absolute;z-index:120;background:#202c40;border:1px solid var(--border);border-radius:8px;padding:10px;box-shadow:0 12px 30px #0009}#colsMenu[hidden]{display:none}#colsMenu label{display:block;white-space:nowrap;padding:5px}
-</style></head><body><main><h1>📊 AI Model Comparison</h1><p>OpenCode Go · ChatGPT Plus · Claude Max — interactive working dataset, v1 (2026-11-02)</p>
-<section class="controls-section"><h2>🔎 Filters</h2><div class="control-row"><label for="search">Search <input id="search" type="search" placeholder="Search models…"></label><button id="clearFilters">Clear filters</button><label><input type="checkbox" id="onlyPins"> Favourites only</label></div><div id="filters" class="fb" role="toolbar" aria-label="Model filters"></div></section>
+
+/* ── live bar ─────────────────────────────────────────────────────── */
+.livebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0 4px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;background:#111b29;font-size:12px;color:var(--muted)}
+.livebar b{color:var(--text);font-weight:650}
+.livebar .dot{width:8px;height:8px;border-radius:50%;display:inline-block;background:#6b7a90}
+.livebar .dot.ok{background:var(--green)}.livebar .dot.stale{background:var(--warn)}.livebar .dot.dead{background:var(--bad)}
+.livebar .sep{width:1px;height:16px;background:var(--border)}
+.livebar button{padding:5px 10px;font-size:12px}
+.livebar .spacer{margin-left:auto}
+
+/* ── fold-out columns ─────────────────────────────────────────────── */
+th.mc-th{position:relative}
+th.mc-th--group .mc-fold{border:0;background:transparent;padding:0 2px;color:var(--accent);font-size:11px;line-height:1}
+th.mc-th--group .mc-fold:hover{background:transparent;color:#fff}
+th.mc-th--sub{background:#1a2434;font-weight:600;color:var(--muted)}
+th.mc-th--sub button{font-size:11px;font-weight:600;color:var(--muted)}
+td.mc-sub{background:#131c29;font-size:13px}
+tr:hover td.mc-sub{background:#1b2637}
+.mc-nomatch{color:var(--warn);cursor:help;font-size:11px;margin-left:6px}
+.mc-extra td:first-child{font-style:italic}
+</style></head><body><main><h1>📊 AI Model Comparison</h1><p>OpenCode Go · ChatGPT Plus · Claude Max · live scores from Artificial Analysis and OpenRouter</p>
+
+<div class="livebar" id="livebar"><span class="dot" id="liveDot"></span><span id="liveText">Live numbers not loaded yet</span><span class="sep"></span><span id="liveCounts"></span><span class="spacer"></span><button id="refresh" title="Re-fetch Artificial Analysis and OpenRouter now">↻ Refresh live</button></div>
+
+<section class="controls-section"><h2>🔎 Filters</h2><div class="control-row"><label for="search">Search <input id="search" type="search" placeholder="Search models…"></label><button id="clearFilters">Clear filters</button><label><input type="checkbox" id="onlyPins"> Favourites only</label><label><input type="checkbox" id="includeAll"> Include models not in my list</label></div><div id="filters" class="fb" role="toolbar" aria-label="Model filters"></div></section>
 <section class="controls-section"><h2>🎯 Comparison</h2><div class="control-row"><label>Baseline <select id="baseSelect" aria-label="Choose baseline model"></select></label><label><input type="checkbox" id="baselineOn" checked> Compare to baseline</label><span class="small">Baseline model is available even when filtered out.</span></div></section>
-<section class="controls-section"><h2>🎨 Display</h2><div class="control-row"><label>Cost view <select id="mode"><option value="blended">Combined (3:1)</option><option value="separate">Input / output</option></select></label><label>Colour <select id="colourMode"><option value="relative">Relative to baseline</option><option value="absolute">Absolute score gradients</option><option value="none">Off</option></select></label><label>Intensity <input id="colourIntensity" type="range" min="0" max="100" value="65" step="5"><output id="intensityLabel">65%</output></label><button id="columnsToggle" aria-expanded="false">☷ Columns</button><div id="colsMenu" hidden></div><button id="reset">↺ Reset view</button><button id="csv">↓ CSV export</button></div><p class="legend">Green = better, red = worse. Higher benchmark scores and lower API prices are better. Go allowance is not colour-ranked.</p></section>
+<section class="controls-section"><h2>🎨 Display</h2><div class="control-row"><label>Colour <select id="colourMode"><option value="relative">Relative to baseline</option><option value="absolute">Absolute score gradients</option><option value="none">Off</option></select></label><label>Intensity <input id="colourIntensity" type="range" min="0" max="100" value="65" step="5"><output id="intensityLabel">65%</output></label><button id="columnsToggle" aria-expanded="false">☷ Columns</button><div id="colsMenu" hidden></div><button id="reset">↺ Reset view</button><button id="csv">↓ CSV export</button></div><p class="legend">Green = better, red = worse. Higher benchmark scores and lower API prices are better. Go allowance is not colour-ranked. Any column with a ▸ next to its name opens into more columns.</p></section>
 <div id="selectionbar" class="selectionbar" hidden><strong id="selectedLabel"></strong><button id="setBase">◎ Use as baseline</button><button id="pinSelected">☆ Pin model</button><button id="clearSelection">× Deselect</button></div><div id="baselineInfo" class="comparison-note"></div><div id="status"></div><div class="tablewrap"><table><thead id="head"></thead><tbody id="body"></tbody></table></div>
-<p class="note"><b>Working data, not verified:</b> The initial model names, prices, Go allowances and benchmark values were transcribed from earlier research discussions and have NOT all been independently verified. Benchmark versions, checkpoints and effort settings may differ. DeepSeek V4 Pro 0813 scores are not necessarily current. Claude Max authentication is not officially supported by OpenCode; Claude entries are comparisons, not confirmed OpenCode access.</p>
-<p class="note"><b>Cost:</b> Combined = (3 × input + output) / 4 USD per million tokens, an uncached 3:1 blend; it is NOT Artificial Analysis's cache-aware 7:2:1 method. Relative cost multiplier uses the selected baseline model’s uncached API reference rates when available; lower is cheaper. Plus/Max API reference prices are NOT additional subscription charges. Go allowances are dollar-equivalent monthly quotas, not extra charges.</p>
-<p class="note">Research: <a href="https://opencode.ai/docs/go/">OpenCode Go</a> · <a href="https://www.tbench.ai/">Terminal-Bench</a> · <a href="https://www.deepswe.dev/">DeepSWE</a> · <a href="https://artificialanalysis.ai/">Artificial Analysis</a>. See <a href="AGENTS.md">AGENTS.md</a> for maintenance rules.</p>
+<p class="note"><b>Working data, not verified:</b> TB4, DeepSWE, provider and Go allowance are transcribed from earlier research and are NOT independently verified here. Live columns (Intel, Engineering, Context, Max output, tok/s, TTFT, price) come from the sources named in each column heading at the moment shown in the live bar. Where a live price exists it takes over from the hand-entered price, and the cell says so on hover.</p>
+<p class="note"><b>Cost:</b> Combined = (3 × input + output) / 4 USD per million tokens, an uncached 3:1 blend. Relative cost multipliers use the selected baseline's price; lower is cheaper. Plus/Max API reference prices are NOT additional subscription charges. Go allowances are dollar-equivalent monthly quotas, not extra charges.</p>
+<p class="note">Research: <a href="https://opencode.ai/docs/go/">OpenCode Go</a> · <a href="https://www.tbench.ai/">Terminal-Bench</a> · <a href="https://www.deepswe.dev/">DeepSWE</a> · <a href="https://artificialanalysis.ai/">Artificial Analysis</a> · <a href="https://openrouter.ai/models">OpenRouter</a>. See <a href="AGENTS.md">AGENTS.md</a> for maintenance rules.</p>
 </main><script>
-const data=[{"name":"Claude Opus 5.5","provider":"Claude Max","tb":66.4,"swe":74.2,"input":4,"output":20,"allow":null},{"name":"Kimi K3.1 Pro","provider":"OpenCode Go","tb":65.7,"swe":null,"input":2,"output":10,"allow":15},{"name":"Claude Sonnet 5.5","provider":"Claude Max","tb":61.8,"swe":null,"input":2,"output":10,"allow":null},{"name":"GPT-6.1 Sol","provider":"ChatGPT Plus","tb":59.6,"swe":75.2,"input":2,"output":10,"allow":null},{"name":"GPT-6 Astra","provider":"ChatGPT Plus","tb":59.6,"swe":74.1,"input":10,"output":50,"allow":null},{"name":"Claude Fable 5.1","provider":"Claude Max","tb":57.9,"swe":null,"input":5,"output":25,"allow":null},{"name":"Gemini 4 Argon","provider":"OpenCode Go","tb":57.6,"swe":77.9,"input":2,"output":10,"allow":30},{"name":"Claude Opus 5","provider":"Claude Max","tb":53.9,"swe":73.7,"input":5,"output":25,"allow":null},{"name":"GPT-6.1 Terra","provider":"ChatGPT Plus","tb":50.3,"swe":null,"input":null,"output":null,"allow":null},{"name":"GPT-6 Sol","provider":"ChatGPT Plus","tb":49.4,"swe":70.5,"input":2,"output":10,"allow":null},{"name":"Claude Fable 5","provider":"Claude Max","tb":44.5,"swe":69.9,"input":10,"output":50,"allow":null},{"name":"DeepSeek V4.1 Flash 1017","provider":"OpenCode Go","tb":42.3,"swe":74.2,"input":0.15,"output":0.6,"allow":80},{"name":"GLM-5.3","provider":"OpenCode Go","tb":41.8,"swe":70.5,"input":1.4,"output":4.4,"allow":15},{"name":"Claude Haiku 5.5","provider":"OpenCode Go","tb":39.2,"swe":59.9,"input":0.1,"output":0.5,"allow":15},{"name":"Qwen3.8 Max","provider":"OpenCode Go","tb":38.9,"swe":null,"input":2,"output":6,"allow":15},{"name":"MiniMax M3.1 Flash","provider":"OpenCode Go","tb":38.1,"swe":73.7,"input":0.15,"output":0.6,"allow":20},{"name":"GPT-5.6 Sol","provider":"ChatGPT Plus","tb":37.9,"swe":72.7,"input":4,"output":20,"allow":null},{"name":"Grok 4.7","provider":"OpenCode Go","tb":37.6,"swe":null,"input":2,"output":6,"allow":15},{"name":"GLM-5.3 Flash","provider":"OpenCode Go","tb":37.4,"swe":63.4,"input":0.15,"output":0.5,"allow":60},{"name":"MiMo V2.6 Pro","provider":"OpenCode Go","tb":34.9,"swe":71.9,"input":0.435,"output":0.87,"allow":15},{"name":"GPT-5.6 Sol Pro","provider":"ChatGPT Plus","tb":32.3,"swe":null,"input":null,"output":null,"allow":null},{"name":"Step 5 Preview","provider":"OpenCode Go","tb":31.8,"swe":null,"input":1,"output":2.7,"allow":15},{"name":"MiMo V2.6 Flash","provider":"OpenCode Go","tb":28.8,"swe":67.9,"input":0.14,"output":0.28,"allow":60},{"name":"Muse Spark 1.3","provider":"OpenCode Go","tb":27.8,"swe":null,"input":1.25,"output":4.25,"allow":null},{"name":"Kimi K3","provider":"OpenCode Go","tb":26.3,"swe":68.5,"input":3,"output":15,"allow":15},{"name":"GPT-5.6 Terra","provider":"ChatGPT Plus","tb":26.3,"swe":69.6,"input":2,"output":12,"allow":null},{"name":"Claude Opus 4.8","provider":"Claude Max","tb":23.6,"swe":59.6,"input":5,"output":25,"allow":null},{"name":"GPT-5.6 Luna","provider":"ChatGPT Plus","tb":17.3,"swe":67.2,"input":0.2,"output":1.2,"allow":null},{"name":"GPT-6 Luna","provider":"ChatGPT Plus","tb":16.4,"swe":59.3,"input":0.1,"output":0.5,"allow":null},{"name":"DeepSeek V4 Pro 0813","provider":"OpenCode Go","tb":14.1,"swe":null,"input":0.66,"output":1.98,"allow":15},{"name":"Qwen3.8 Flash","provider":"OpenCode Go","tb":null,"swe":58.7,"input":0.15,"output":0.47,"allow":30},{"name":"MiniMax M3","provider":"OpenCode Go","tb":null,"swe":null,"input":0.3,"output":1.2,"allow":60},{"name":"GLM-5.2","provider":"OpenCode Go","tb":null,"swe":null,"input":1.4,"output":4.4,"allow":60},{"name":"Kimi K2.7 Code","provider":"OpenCode Go","tb":null,"swe":null,"input":0.95,"output":4,"allow":60},{"name":"LongCat 2.0","provider":"OpenCode Go","tb":null,"swe":null,"input":0.3,"output":1.2,"allow":60},{"name":"MiMo V2.5","provider":"OpenCode Go","tb":null,"swe":null,"input":0.14,"output":0.28,"allow":60},{"name":"MiMo V2.5 Pro","provider":"OpenCode Go","tb":null,"swe":null,"input":0.435,"output":0.87,"allow":15},{"name":"Muse Spark 1.2","provider":"OpenCode Go","tb":null,"swe":null,"input":0.1,"output":0.2,"allow":60},{"name":"Qwen3.7 Plus","provider":"OpenCode Go","tb":null,"swe":null,"input":0.4,"output":1.6,"allow":60},{"name":"Hy4 Preview","provider":"OpenCode Go","tb":null,"swe":null,"input":0.834,"output":2.501,"allow":30},{"name":"Hy3","provider":"OpenCode Go","tb":null,"swe":null,"input":0.14,"output":0.58,"allow":60},{"name":"GPT-5.5","provider":"ChatGPT Plus","tb":null,"swe":57.5,"input":null,"output":null,"allow":null},{"name":"Claude Sonnet 5","provider":"Claude Max","tb":null,"swe":null,"input":2,"output":10,"allow":null}];
+// ── My list: the hand-kept spine ─────────────────────────────────────
+// provider, TB4, DeepSWE and Go allowance are mine and no live API carries
+// them. Everything else is filled in live by the local helper and overrides
+// the hand-entered numbers where a live value exists.
+const data=[{"name":"Claude Opus 5.5","provider":"Claude Max","tb":66.4,"swe":74.2,"input":4,"output":20,"allow":null},{"name":"Kimi K3.1 Pro","provider":"OpenCode Go","tb":65.7,"swe":null,"input":2,"output":10,"allow":15},{"name":"Claude Sonnet 5.5","provider":"Claude Max","tb":61.8,"swe":null,"input":2,"output":10,"allow":null},{"name":"GPT-6.1 Sol","provider":"ChatGPT Plus","tb":59.6,"swe":75.2,"input":2,"output":10,"allow":null},{"name":"GPT-6 Astra","provider":"ChatGPT Plus","tb":59.6,"swe":74.1,"input":10,"output":50,"allow":null},{"name":"Claude Fable 5.1","provider":"Claude Max","tb":57.9,"swe":null,"input":5,"output":25,"allow":null},{"name":"Gemini 4 Argon","provider":"OpenCode Go","tb":57.6,"swe":77.9,"input":2,"output":10,"allow":30},{"name":"Claude Opus 5","provider":"Claude Max","tb":53.9,"swe":73.7,"input":5,"output":25,"allow":null},{"name":"GPT-6.1 Terra","provider":"ChatGPT Plus","tb":50.3,"swe":null,"input":null,"output":null,"allow":null},{"name":"GPT-6 Sol","provider":"ChatGPT Plus","tb":49.4,"swe":70.5,"input":2,"output":10,"allow":null},{"name":"Claude Fable 5","provider":"Claude Max","tb":44.5,"swe":69.9,"input":10,"output":50,"allow":null},{"name":"DeepSeek V4.1 Flash 1017","provider":"OpenCode Go","tb":42.3,"swe":74.2,"input":0.15,"output":0.6,"allow":80},{"name":"GLM-5.3","provider":"OpenCode Go","tb":41.8,"swe":70.5,"input":1.4,"output":4.4,"allow":15},{"name":"Claude Haiku 5.5","provider":"OpenCode Go","tb":39.2,"swe":59.9,"input":0.1,"output":0.5,"allow":15},{"name":"Qwen3.8 Max","provider":"OpenCode Go","tb":38.9,"swe":null,"input":2,"output":6,"allow":15},{"name":"MiniMax M3.1 Flash","provider":"OpenCode Go","tb":38.1,"swe":73.7,"input":0.15,"output":0.6,"allow":20},{"name":"GPT-5.6 Sol","provider":"ChatGPT Plus","tb":37.9,"swe":72.7,"input":4,"output":20,"allow":null},{"name":"Grok 4.7","provider":"OpenCode Go","tb":37.6,"swe":null,"input":2,"output":6,"allow":15},{"name":"GLM-5.3 Flash","provider":"OpenCode Go","tb":37.4,"swe":63.4,"input":0.15,"output":0.5,"allow":60},{"name":"MiMo V2.6 Pro","provider":"OpenCode Go","tb":34.9,"swe":71.9,"input":0.435,"output":0.87,"allow":15},{"name":"GPT-5.6 Sol Pro","provider":"ChatGPT Plus","tb":32.3,"swe":null,"input":null,"output":null,"allow":null},{"name":"Step 5 Preview","provider":"OpenCode Go","tb":31.8,"swe":null,"input":1,"output":2.7,"allow":15},{"name":"MiMo V2.6 Flash","provider":"OpenCode Go","tb":28.8,"swe":67.9,"input":0.14,"output":0.28,"allow":60},{"name":"Muse Spark 1.3","provider":"OpenCode Go","tb":27.8,"swe":null,"input":1.25,"output":4.25,"allow":null},{"name":"Kimi K3","provider":"OpenCode Go","tb":26.3,"swe":68.5,"input":3,"output":15,"allow":15},{"name":"GPT-5.6 Terra","provider":"ChatGPT Plus","tb":26.3,"swe":69.6,"input":2,"output":12,"allow":null},{"name":"Claude Opus 4.8","provider":"Claude Max","tb":23.6,"swe":59.6,"input":5,"output":25,"allow":null},{"name":"GPT-5.6 Luna","provider":"ChatGPT Plus","tb":17.3,"swe":67.2,"input":0.2,"output":1.2,"allow":null},{"name":"GPT-6 Luna","provider":"ChatGPT Plus","tb":16.4,"swe":59.3,"input":0.1,"output":0.5,"allow":null},{"name":"DeepSeek V4 Pro 0813","provider":"OpenCode Go","tb":14.1,"swe":null,"input":0.66,"output":1.98,"allow":15},{"name":"Qwen3.8 Flash","provider":"OpenCode Go","tb":null,"swe":58.7,"input":0.15,"output":0.47,"allow":30},{"name":"MiniMax M3","provider":"OpenCode Go","tb":null,"swe":null,"input":0.3,"output":1.2,"allow":60},{"name":"GLM-5.2","provider":"OpenCode Go","tb":null,"swe":null,"input":1.4,"output":4.4,"allow":60},{"name":"Kimi K2.7 Code","provider":"OpenCode Go","tb":null,"swe":null,"input":0.95,"output":4,"allow":60},{"name":"LongCat 2.0","provider":"OpenCode Go","tb":null,"swe":null,"input":0.3,"output":1.2,"allow":60},{"name":"MiMo V2.5","provider":"OpenCode Go","tb":null,"swe":null,"input":0.14,"output":0.28,"allow":60},{"name":"MiMo V2.5 Pro","provider":"OpenCode Go","tb":null,"swe":null,"input":0.435,"output":0.87,"allow":15},{"name":"Muse Spark 1.2","provider":"OpenCode Go","tb":null,"swe":null,"input":0.1,"output":0.2,"allow":60},{"name":"Qwen3.7 Plus","provider":"OpenCode Go","tb":null,"swe":null,"input":0.4,"output":1.6,"allow":60},{"name":"Hy4 Preview","provider":"OpenCode Go","tb":null,"swe":null,"input":0.834,"output":2.501,"allow":30},{"name":"Hy3","provider":"OpenCode Go","tb":null,"swe":null,"input":0.14,"output":0.58,"allow":60},{"name":"GPT-5.5","provider":"ChatGPT Plus","tb":null,"swe":null,"input":null,"output":null,"allow":null},{"name":"Claude Sonnet 5","provider":"Claude Max","tb":null,"swe":null,"input":2,"output":10,"allow":null}];
 
 const $=id=>document.getElementById(id);
 const defaultBaseline='DeepSeek V4.1 Flash 1017';
-const metricDefs={tb:['TB4',true],swe:['DeepSWE',true],blend:['Cost',false],input:['Input cost',false],output:['Output cost',false],allow:['Go allowance',true]};
-const filterFields=[
-{id:'provider',label:'Provider',type:'choice',options:[...new Set(data.map(r=>r.provider))]},
-{id:'name',label:'Model',type:'choice',options:data.map(r=>r.name).sort()},
-{id:'favourite',label:'Favourite',type:'choice',options:['Pinned','Not pinned']},
-...Object.entries(metricDefs).map(([id,[label]])=>({id,label,type:'numeric',options:[]}))
+const PREFS='aiModelComparison.v3';
+
+// ── Live state ──────────────────────────────────────────────────────
+// live.models is the merged server answer; liveByKey joins it onto my list by
+// the same normalised name the server used, so the two never drift apart.
+let live={models:[],sources:{},generated_at:null,error:null},liveByKey=new Map(),liveStatus='idle';
+
+const norm=s=>String(s||'').toLowerCase().slice(String(s||'').toLowerCase().lastIndexOf('/')+1).replace(/\(.*?\)/g,' ').replace(/:(free|batch|extended|online)$/g,'').replace(/\b(non-reasoning|reasoning|thinking|nothinking|adaptive|instruct|chat|latest|preview|exp|experimental|fast|turbo|high|low|medium|max|xhigh|minimal|default|fallback)\b/g,' ').replace(/^[a-z]+:\s+/,'').replace(/\b\d{4}-\d{2}-\d{2}\b/g,' ').replace(/\b\d{6,}\b/g,' ').replace(/[^a-z0-9]+/g,'');
+
+function applyLive(){
+  liveByKey=new Map();
+  for(const m of live.models||[]){
+    if(m.key&&!liveByKey.has(m.key))liveByKey.set(m.key,m);
+    const k2=norm(m.name);
+    if(k2&&!liveByKey.has(k2))liveByKey.set(k2,m);
+  }
+  for(const r of data)r.live=liveByKey.get(norm(r.name))||null;
+  drawLiveBar();drawBaseSelect();
+}
+function extraRows(){
+  if(!$('includeAll').checked)return [];
+  const mine=new Set(data.map(r=>norm(r.name)));
+  return (live.models||[]).filter(m=>!mine.has(m.key)&&m.intel!=null).map(m=>({name:m.name,provider:m.creator||'—',tb:null,swe:null,input:null,output:null,allow:null,live:m,extra:true}));
+}
+function rows(){return data.concat(extraRows())}
+
+function drawLiveBar(){
+  const dot=$('liveDot'),text=$('liveText'),counts=$('liveCounts');
+  const src=live.sources||{},aa=src.aa||{},or=src.openrouter||{};
+  const ok=aa.count&&!aa.error,stale=aa.stale;
+  dot.className='dot '+(live.error?'dead':stale?'stale':ok?'ok':'');
+  if(live.error){text.textContent='Live numbers unavailable: '+live.error;counts.textContent='';return}
+  if(!live.generated_at){text.textContent='Loading live numbers…';counts.textContent='';return}
+  const when=new Date(live.generated_at),mm=String(when.getMinutes()).padStart(2,'0');
+  text.innerHTML='Live <b>'+when.getHours()+':'+mm+'</b>'+(stale?' · <b style="color:var(--warn)">last good copy</b>':'')+(aa.error?' · AA: '+aa.error:'')+(or.error?' · OpenRouter: '+or.error:'');
+  counts.textContent=(aa.count||0)+' AA rows · '+(or.count||0)+' OpenRouter models · '+(live.models||[]).length+' merged';
+}
+
+async function loadLive(force){
+  $('refresh').disabled=true;$('refresh').textContent='↻ Refreshing…';
+  try{
+    const res=await fetch('api/live'+(force?'?force=1':''),{cache:'no-store'});
+    if(!res.ok)throw new Error('helper returned '+res.status);
+    live=await res.json();liveStatus='ok';
+  }catch(e){
+    live={models:[],sources:{},generated_at:null,error:String(e.message||e)==='Failed to fetch'?'the local helper is not running (open the page from its launcher)':String(e.message||e)};
+    liveStatus='dead';
+  }finally{
+    $('refresh').disabled=false;$('refresh').textContent='↻ Refresh live';
+    applyLive();drawFiltersIfReady();render();
+  }
+}
+
+// ── Metrics and columns ─────────────────────────────────────────────
+// A column is one of: a plain value, or a group with sub-columns that fold out
+// in place. Fold state is per group and remembered.
+const metricDefs={
+  tb:['TB4',true],swe:['DeepSWE',true],
+  blend:['Cost',false],input:['Input cost',false],output:['Output cost',false],
+  intel:['Intel',true],eng:['Engineering',true],
+  ctx:['Context',true],maxout:['Max output',true],
+  tps:['tok/s',true],ttft:['TTFT',false],
+  myin:['My $/M in',false],myout:['My $/M out',false],
+  allow:['Go allowance',true]
+};
+
+const COLUMNS=[
+  {key:'name',label:'Model'},
+  {key:'provider',label:'Provider'},
+  {key:'tb',label:'TB4'},
+  {key:'swe',label:'DeepSWE'},
+  {key:'cost',label:'Cost',subs:['blend','input','output','cachehit','myin','myout'],primary:'blend'},
+  {key:'costdiff',label:'Cost diff',subs:['ratio','ix','ox'],primary:'ratio'},
+  {key:'score',label:'Intel',subs:['intel','eng'],primary:'intel'},
+  {key:'ctxgrp',label:'Context',subs:['ctx','maxout'],primary:'ctx'},
+  {key:'speed',label:'Speed',subs:['tps','ttft'],primary:'tps'},
+  {key:'allow',label:'Go allowance'}
 ];
-let activeFilters=[],seq=0,pop=null,sort='tb',desc=true,selectedName=null,baselineName=defaultBaseline,pins=new Set(),columnVisibility={tb:true,swe:true,blend:true,ratio:true,input:true,output:true,ix:true,ox:true,allow:true};
-function readPreferences(){try{const p=JSON.parse(localStorage.getItem('aiModelComparison.v2')||'null');if(!p)return;if(data.some(r=>r.name===p.baseline))baselineName=p.baseline;if(Array.isArray(p.pins))pins=new Set(p.pins.filter(n=>data.some(r=>r.name===n)));if(p.columns&&typeof p.columns==='object')for(const k of Object.keys(columnVisibility))if(typeof p.columns[k]==='boolean')columnVisibility[k]=p.columns[k];if(['relative','absolute','none'].includes(p.colour))$('colourMode').value=p.colour;if(Number.isFinite(p.intensity))$('colourIntensity').value=Math.min(100,Math.max(0,p.intensity));if(['blended','separate'].includes(p.costMode))$('mode').value=p.costMode;if(typeof p.enabled==='boolean')$('baselineOn').checked=p.enabled;if(typeof p.onlyPins==='boolean')$('onlyPins').checked=p.onlyPins;if(Array.isArray(p.filters))activeFilters=p.filters.filter(f=>filterFields.some(x=>x.id===f.field)&&typeof f.operator==='string'&&Array.isArray(f.values)).map(f=>({...f,id:++seq}));if(typeof p.search==='string')$('search').value=p.search;}catch(e){console.warn('Could not restore preferences',e)}}
-function savePreferences(){try{localStorage.setItem('aiModelComparison.v2',JSON.stringify({baseline:baselineName,pins:[...pins],columns:columnVisibility,colour:$('colourMode').value,intensity:Number($('colourIntensity').value),costMode:$('mode').value,enabled:$('baselineOn').checked,onlyPins:$('onlyPins').checked,filters:activeFilters,search:$('search').value}))}catch(e){}}
-const baselineRow=()=>data.find(r=>r.name===baselineName)||data.find(r=>r.name===defaultBaseline);
-const blend=r=>r.input==null||r.output==null?null:(3*r.input+r.output)/4;
-function raw(r,k){return k==='blend'?blend(r):r[k]}
+const SUB_META={cachehit:['Cache hit',false],myin:['My $/M in',false],myout:['My $/M out',false],ratio:['Combined',false],ix:['Input',false],ox:['Output',false],intel:['Intel',true],eng:['Engineering',true],ctx:['Context',true],maxout:['Max output',true],tps:['tok/s',true],ttft:['TTFT',false],input:['$/M in',false],output:['$/M out',false]};
+// A group's own header cell shows the value of its primary sub-column, so the
+// folded view still reads as a number instead of a blank.
+const GROUP_PRIMARY={cost:'blend',costdiff:'ratio',score:'intel',ctxgrp:'ctx',speed:'tps'};
+const vkey=k=>GROUP_PRIMARY[k]||k;
+const ALL_KEYS=['tb','swe','blend','input','output','cachehit','myin','myout','ratio','ix','ox','intel','eng','ctx','maxout','tps','ttft','allow'];
+
+const filterFields=[
+  {id:'provider',label:'Provider',type:'choice',options:[...new Set(data.map(r=>r.provider))]},
+  {id:'name',label:'Model',type:'choice',options:data.map(r=>r.name).sort()},
+  {id:'favourite',label:'Favourite',type:'choice',options:['Pinned','Not pinned']},
+  ...Object.entries(metricDefs).map(([id,[label]])=>({id,label,type:'numeric',options:[]}))
+];
+
+let activeFilters=[],seq=0,pop=null,sort='tb',desc=true,selectedName=null,baselineName=defaultBaseline,pins=new Set();
+let columnVisibility=Object.fromEntries(ALL_KEYS.map(k=>[k,true]));
+let expanded=new Set();
+
+// ── Value resolution ────────────────────────────────────────────────
+// Live wins where live exists. A missing live number is never 0, and never
+// overwrites a hand-entered one, so a source outage cannot blank the table.
+const liveOf=r=>r.live||null;
+const pick=(r,liveKey,handKey)=>liveOf(r)&&liveOf(r)[liveKey]!=null?liveOf(r)[liveKey]:(handKey?r[handKey]:null);
+const costIn=r=>pick(r,'priceIn','input');
+const costOut=r=>pick(r,'priceOut','output');
+const blend=r=>{const i=costIn(r),o=costOut(r);return i==null||o==null?null:(3*i+o)/4};
+const raw=(r,k)=>({blend:blend(r),cachehit:liveOf(r)?.cacheHit??null,myin:r.input??null,myout:r.output??null,intel:liveOf(r)?.intel??null,eng:liveOf(r)?.eng??null,ctx:liveOf(r)?.ctx??null,maxout:liveOf(r)?.maxOut??null,tps:liveOf(r)?.tps??null,ttft:liveOf(r)?.ttft??null,input:costIn(r),output:costOut(r)}[k]??r[k]);
 const ratioKey={ratio:'blend',ix:'input',ox:'output'};
+const baselineRow=()=>rows().find(r=>r.name===baselineName)||rows().find(r=>r.name===defaultBaseline)||null;
 function v(r,k){const target=ratioKey[k];if(!target)return raw(r,k);const x=raw(r,target),b=raw(baselineRow(),target);return !$('baselineOn').checked||x==null||b==null||b<=0?null:x/b}
-function fmt(r,k){const x=v(r,k);if(x==null)return '—';if(['tb','swe'].includes(k))return x.toFixed(1);if(['ratio','ix','ox'].includes(k))return x.toFixed(2)+'×';if(['blend','input','output'].includes(k))return '$'+parseFloat(x.toFixed(4));if(k==='allow')return '$'+x;return String(x)}
-function allCols(){return [['name','Model'],['provider','Provider'],['tb','TB4'],['swe','DeepSWE'],...($('mode').value==='blended'?[['blend','Cost'],['ratio','Cost diff']]:[['input','Input cost'],['output','Output cost'],['ix','Input diff'],['ox','Output diff']]),['allow','Go allowance']]}
-function cols(){return allCols().filter(([k])=>columnVisibility[k]!==false)}
+const fmtNum=(x,d)=>x==null?'—':(+x).toFixed(d);
+function fmt(r,k){
+  if(k==='name')return r.name;
+  if(k==='provider')return r.provider;
+  const x=v(r,k);
+  if(x==null)return '—';
+  if(['tb','swe','intel','eng'].includes(k))return (+x).toFixed(1);
+  if(['ratio','ix','ox'].includes(k))return (+x).toFixed(2)+'×';
+  if(['blend','input','output','cachehit','myin','myout'].includes(k))return '$'+parseFloat((+x).toFixed(4));
+  if(k==='allow')return '$'+x;
+  if(k==='ctx'||k==='maxout')return x>=1e6?((x/1e6)%1?(x/1e6).toFixed(2):x/1e6)+'M':x>=1000?Math.round(x/1000)+'k':String(x);
+  if(k==='tps')return (+x).toFixed(0);
+  if(k==='ttft')return (+x).toFixed(2);
+  return String(x);
+}
+
+// ── Visible columns ─────────────────────────────────────────────────
+function visibleColumns(){
+  const out=[];
+  for(const c of COLUMNS){
+    if(c.subs){
+      const anyVisible=c.subs.some(s=>columnVisibility[s]!==false);
+      if(!anyVisible&&columnVisibility[c.key]===false)continue;
+      out.push({key:c.key,label:c.label,group:true,open:expanded.has(c.key),subs:c.subs,primary:c.primary});
+      // The parent cell already shows the primary value, so the primary is not
+      // repeated as a sub-column. That repeat is what made the old expandable
+      // columns read as ghost columns.
+      if(expanded.has(c.key))for(const s of c.subs)if(s!==c.primary&&columnVisibility[s]!==false)out.push({key:s,label:SUB_META[s]?.[0]||s,sub:true,parent:c.key});
+    }else{
+      if(columnVisibility[c.key]===false)continue;
+      out.push({key:c.key,label:c.label});
+    }
+  }
+  return out;
+}
+
+// ── Filters ─────────────────────────────────────────────────────────
 function isNumeric(f){return filterFields.find(x=>x.id===f.field)?.type==='numeric'}
 function fieldValue(r,k){if(k==='favourite')return pins.has(r.name)?'Pinned':'Not pinned';return k==='name'?r.name:k==='provider'?r.provider:raw(r,k)}
 function compareFilter(r,f){
-if(!f.values.length)return true;
-const field=filterFields.find(x=>x.id===f.field);if(!field)return true;
-const x=fieldValue(r,f.field);
-if(field.type==='choice')return f.operator==='is not'?!f.values.includes(String(x)):f.values.includes(String(x));
-if(f.operator==='has score')return x!=null;
-if(f.operator==='is missing')return x==null;
-if(x==null)return false;
-const y=(f.operator.includes('baseline')||f.operator.startsWith('at least %'))?raw(baselineRow(),f.field):Number(f.values[0]);if(y==null||!Number.isFinite(y))return false;
-if(f.operator==='above baseline'||f.operator==='greater than')return x>y;
-if(f.operator==='below baseline'||f.operator==='less than')return x<y;
-if(f.operator==='equal to')return x===y;
-if(f.operator==='cheaper than baseline')return x<y;
-if(f.operator==='more expensive than baseline')return x>y;
-if(f.operator==='at least % cheaper')return y>0&&Number.isFinite(Number(f.values[0]))&&(y-x)/y*100>=Number(f.values[0]);
-if(f.operator==='at least % more expensive')return y>0&&Number.isFinite(Number(f.values[0]))&&(x-y)/y*100>=Number(f.values[0]);
-return true
+  if(!f.values.length)return true;
+  const field=filterFields.find(x=>x.id===f.field);if(!field)return true;
+  const x=fieldValue(r,f.field);
+  if(field.type==='choice')return f.operator==='is not'?!f.values.includes(String(x)):f.values.includes(String(x));
+  if(f.operator==='has score')return x!=null;
+  if(f.operator==='is missing')return x==null;
+  if(x==null)return false;
+  const y=(f.operator.includes('baseline')||f.operator.startsWith('at least %'))?raw(baselineRow(),f.field):Number(f.values[0]);if(y==null||!Number.isFinite(y))return false;
+  if(f.operator==='above baseline'||f.operator==='greater than')return x>y;
+  if(f.operator==='below baseline'||f.operator==='less than')return x<y;
+  if(f.operator==='equal to')return x===y;
+  if(f.operator==='cheaper than baseline')return x<y;
+  if(f.operator==='more expensive than baseline')return x>y;
+  if(f.operator==='at least % cheaper')return y>0&&Number.isFinite(Number(f.values[0]))&&(y-x)/y*100>=Number(f.values[0]);
+  if(f.operator==='at least % more expensive')return y>0&&Number.isFinite(Number(f.values[0]))&&(x-y)/y*100>=Number(f.values[0]);
+  return true
 }
 function filterEnabled(f){return $('baselineOn').checked||(!f.operator.includes('baseline')&&!f.operator.includes('% cheaper')&&!f.operator.includes('% more expensive'))}
-function current(){const q=$('search').value.toLowerCase().trim(),onlyPins=$('onlyPins').checked;return data.filter(r=>(!onlyPins||pins.has(r.name))&&(pins.has(r.name)||(r.name.toLowerCase().includes(q)&&activeFilters.every(f=>!f.values.length||!filterEnabled(f)||compareFilter(r,f))))).sort((a,b)=>{const ap=pins.has(a.name),bp=pins.has(b.name);if(ap!==bp)return ap?-1:1;const x=v(a,sort),y=v(b,sort);if(x==null)return y==null?0:1;if(y==null)return -1;const cmp=typeof x==='string'?x.localeCompare(y):x-y;return desc?-cmp:cmp})}
+function current(){
+  const q=$('search').value.toLowerCase().trim(),onlyPins=$('onlyPins').checked;
+  return rows().filter(r=>(!onlyPins||pins.has(r.name))&&(pins.has(r.name)||(r.name.toLowerCase().includes(q)&&activeFilters.every(f=>!f.values.length||!filterEnabled(f)||compareFilter(r,f))))).sort((a,b)=>{
+    const ap=pins.has(a.name),bp=pins.has(b.name);if(ap!==bp)return ap?-1:1;
+    const x=sort==='name'?a.name.toLowerCase():sort==='provider'?a.provider.toLowerCase():v(a,sort);
+    const y=sort==='name'?b.name.toLowerCase():sort==='provider'?b.provider.toLowerCase():v(b,sort);
+    if(x==null)return y==null?0:1;if(y==null)return -1;
+    const cmp=typeof x==='string'?x.localeCompare(y):x-y;return desc?-cmp:cmp});
+}
+
+// ── Colour ──────────────────────────────────────────────────────────
 function comparisonStyle(r,k){
 const mode=$('colourMode').value,enabled=$('baselineOn').checked,intensityScale=Number($('colourIntensity').value)/100;
-if(mode==='none'||intensityScale===0||!['tb','swe','blend','ratio','input','output','ix','ox'].includes(k))return '';
+const ranked=['tb','swe','intel','eng','blend','ratio','input','output','cachehit','ix','ox','tps','ttft'];
+if(mode==='none'||intensityScale===0||!ranked.includes(k))return '';
 const x=v(r,k);if(x==null)return '';
-const cost=['blend','ratio','input','output','ix','ox'].includes(k);
+const cost=['blend','ratio','input','output','cachehit','ix','ox','ttft'].includes(k);
 let advantage;
 if(mode==='relative'){if(!enabled)return '';const base=v(baselineRow(),k);if(base==null||base===0)return '';advantage=(cost?base-x:x-base)/Math.abs(base)}
-else{const vals=data.map(model=>v(model,k)).filter(Number.isFinite);if(vals.length<2)return '';const lo=Math.min(...vals),hi=Math.max(...vals);if(hi===lo)return '';advantage=((cost?hi-x:x-lo)/(hi-lo)-.5)*2}
+else{const vals=rows().map(model=>v(model,k)).filter(Number.isFinite);if(vals.length<2)return '';const lo=Math.min(...vals),hi=Math.max(...vals);if(hi===lo)return '';advantage=((cost?hi-x:x-lo)/(hi-lo)-.5)*2}
 if(Math.abs(advantage)<1e-9)return '';
 const magnitude=Math.min(1,Math.log1p(Math.abs(advantage)*4)/Math.log(9))*intensityScale;
 return 'hsl('+(advantage>0?145:2)+' '+Math.round(28+magnitude*65)+'% '+Math.round(86-magnitude*35)+'%)'
 }
+
+// ── Menus ───────────────────────────────────────────────────────────
 function closePop(){if(pop){pop.remove();pop=null}}
-function menu(anchor,options,selected,pick,multi=false){
+function menu(anchor,options,selected,pickFn,multi=false){
 closePop();const el=document.createElement('div');el.className='fpop';el.setAttribute('role','dialog');el.setAttribute('aria-label','Filter options');const search=document.createElement('input');search.type='search';search.placeholder='Search…';search.setAttribute('aria-label','Search filter options');el.append(search);const list=document.createElement('div');list.className='options';el.append(list);
-function paint(){list.replaceChildren();for(const option of options.filter(x=>x.toLowerCase().includes(search.value.toLowerCase()))){const b=document.createElement('button');b.type='button';b.textContent=(multi?(selected.includes(option)?'☑ ':'☐ '):'')+option;b.setAttribute('aria-selected',String(selected.includes(option)));b.onclick=()=>{if(!multi)closePop();pick(option);if(multi&&pop===el){selected=selected.includes(option)?selected.filter(x=>x!==option):[...selected,option];paint()}};list.append(b)}if(!list.children.length)list.textContent='No matches'}
+function paint(){list.replaceChildren();for(const option of options.filter(x=>x.toLowerCase().includes(search.value.toLowerCase()))){const b=document.createElement('button');b.type='button';b.textContent=(multi?(selected.includes(option)?'☑ ':'☐ '):'')+option;b.setAttribute('aria-selected',String(selected.includes(option)));b.onclick=()=>{if(!multi)closePop();pickFn(option);if(multi&&pop===el){selected=selected.includes(option)?selected.filter(x=>x!==option):[...selected,option];paint()}};list.append(b)}if(!list.children.length)list.textContent='No matches'}
 search.oninput=paint;paint();document.body.append(el);pop=el;const r=anchor.getBoundingClientRect();el.style.left=Math.max(8,Math.min(r.left,innerWidth-el.offsetWidth-8))+'px';el.style.top=(r.bottom+el.offsetHeight+7<innerHeight?r.bottom+7:Math.max(8,r.top-el.offsetHeight-7))+'px';search.focus()
 }
 document.addEventListener('pointerdown',e=>{if(pop&&!pop.contains(e.target)&&!e.target.closest('[data-fanchor]'))closePop()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closePop()});window.addEventListener('resize',closePop);
-const ops=f=>isNumeric(f)?['above baseline','below baseline','greater than','less than','equal to','has score','is missing',...( ['blend','input','output'].includes(f.field)?['at least % cheaper','at least % more expensive']:[])]:['is','is not'];
+const ops=f=>isNumeric(f)?['above baseline','below baseline','greater than','less than','equal to','has score','is missing',...(['blend','input','output','cachehit'].includes(f.field)?['at least % cheaper','at least % more expensive']:[])]:['is','is not'];
+
 function drawFilters(){
 const root=$('filters');root.replaceChildren();const btn=(label,fn)=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.fanchor='1';b.onclick=()=>fn(b);return b};
 for(const f of activeFilters){const field=filterFields.find(x=>x.id===f.field);if(!field)continue;const chip=document.createElement('div');chip.className='fc';if(!filterEnabled(f))chip.classList.add('mutedfilter');
@@ -89,23 +257,124 @@ const remove=btn('×',()=>{activeFilters=activeFilters.filter(x=>x.id!==f.id);cl
 root.append(btn('+ Filter',b=>menu(b,filterFields.map(x=>x.label),[],label=>{const field=filterFields.find(x=>x.label===label);activeFilters.push({id:++seq,field:field.id,operator:field.type==='choice'?'is':'above baseline',values:field.type==='choice'?[]:['_']});drawFilters();render();const controls=root.querySelectorAll('.fc');const last=controls[controls.length-1];last?.querySelector('.fc button:nth-child(3)')?.click()})));
 if(activeFilters.length)root.append(btn('Clear',()=>{activeFilters=[];closePop();drawFilters();render()}));
 }
-function drawColumns(){const menu=$('colsMenu');menu.replaceChildren();for(const [k,label] of [['tb','TB4'],['swe','DeepSWE'],['blend','Cost'],['ratio','Cost diff'],['input','Input cost'],['output','Output cost'],['ix','Input diff'],['ox','Output diff'],['allow','Go allowance']]){const lab=document.createElement('label'),input=document.createElement('input');input.type='checkbox';input.checked=columnVisibility[k];input.onchange=()=>{columnVisibility[k]=input.checked;render()};lab.append(input,document.createTextNode(' '+label));menu.append(lab)}}
-function selectionToolbar(){const r=data.find(x=>x.name===selectedName);$('selectionbar').hidden=!r;if(!r)return;$('selectedLabel').textContent=r.name+(r.name===baselineName?' · Baseline':'');$('setBase').disabled=r.name===baselineName;$('pinSelected').textContent=pins.has(r.name)?'★ Unpin model':'☆ Pin model'}
-function render(){const columns=cols();if(!columns.some(([k])=>k===sort)){sort='tb';desc=true}const head=$('head');head.replaceChildren();const tr=document.createElement('tr');for(const [k,label] of columns){const th=document.createElement('th'),b=document.createElement('button');b.textContent=label+' '+(sort===k?(desc?'↓':'↑'):'↕');b.onclick=()=>{if(sort===k)desc=!desc;else{sort=k;desc=!['name','provider'].includes(k)}render()};th.append(b);tr.append(th)}head.append(tr);
-const body=$('body');body.replaceChildren();const rows=current();for(const r of rows){const row=document.createElement('tr');row.dataset.model=r.name;row.tabIndex=0;row.setAttribute('aria-selected',String(selectedName===r.name));if(selectedName===r.name)row.classList.add('is-selected');if(r.name===baselineName)row.classList.add('is-baseline');if(pins.has(r.name))row.classList.add('pinned');row.onclick=()=>selectRow(r.name);row.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectRow(r.name)}};for(const [k] of columns){const td=document.createElement('td');td.textContent=fmt(r,k);if(k==='name'&&pins.has(r.name)){const star=document.createElement('span');star.className='star';star.textContent='★ ';td.prepend(star)}const colour=comparisonStyle(r,k);if(colour){td.style.color=colour;td.classList.add('comparecell')}row.append(td)}body.append(row)}
-$('baselineInfo').textContent='Baseline: '+baselineName+' · '+($('baselineOn').checked?'Comparison enabled':'Comparison disabled')+' · Pinned models stay visible and sort to the top.';$('status').textContent='Showing '+rows.length+' of '+data.length+' models · Click row to select · Click column heading to sort';$('intensityLabel').textContent=$('colourIntensity').value+'%';selectionToolbar();savePreferences()}
+
+function drawColumns(){const menuEl=$('colsMenu');menuEl.replaceChildren();
+ const add=(label,key,indent)=>{const lab=document.createElement('label');if(indent)lab.style.paddingLeft='22px';const input=document.createElement('input');input.type='checkbox';input.checked=columnVisibility[key]!==false;input.onchange=()=>{columnVisibility[key]=input.checked;render()};lab.append(input,document.createTextNode(' '+label));menuEl.append(lab)};
+ for(const c of COLUMNS){if(c.subs){const head=document.createElement('label');head.style.cssText='display:block;padding:5px;font-weight:700;color:var(--accent)';head.textContent=c.label+' ▸';menuEl.append(head);for(const s of c.subs)add(SUB_META[s]?.[0]||s,s,true)}else add(c.label,c.key,false)}
+}
+
+// ── Render ──────────────────────────────────────────────────────────
+function selectionToolbar(){const r=rows().find(x=>x.name===selectedName);$('selectionbar').hidden=!r;if(!r)return;$('selectedLabel').textContent=r.name+(r.name===baselineName?' · Baseline':'');$('setBase').disabled=r.name===baselineName;$('pinSelected').textContent=pins.has(r.name)?'★ Unpin model':'☆ Pin model'}
+
+function cellTitle(r,k){
+  const l=liveOf(r);
+  if(k==='name'&&!l&&!r.extra)return 'No live match in Artificial Analysis or OpenRouter for "'+r.name+'". The name spellings differ; rename my row or ignore it.';
+  if(['intel','eng'].includes(k)&&l)return (k==='intel'?'Artificial Analysis intelligence index':'Artificial Analysis engineering index')+' · '+l.aaName+(l.variants>1?' · best of '+l.variants+' effort variants':'');
+  if(['ctx','maxout'].includes(k)&&l)return (k==='ctx'?'Context window':'Max output tokens')+' · OpenRouter'+(l.ctx==null&&k==='ctx'?' (not listed)':'');
+  if(['tps','ttft'].includes(k)&&l)return (k==='tps'?'Median output tokens per second':'Median time to first token, seconds')+' · Artificial Analysis';
+  if(k==='blend'&&l)return 'Combined 3:1 price per million tokens, $'+(+blend(r)).toFixed(4)+' · standard list price from '+(l.priceSource==='artificial-analysis'?'Artificial Analysis':'OpenRouter')+' · open the Cost column for input, output, cache-hit and my own figures';
+  if(['input','output','cachehit','myin','myout'].includes(k)&&l)return (k==='cachehit'?'Cached input price per million tokens · OpenRouter':k.startsWith('my')?'My hand-entered reference price (off-peak or discounted where I knew it); the live Cost column uses the standard list price':'Standard list price per million tokens · '+(l.priceSource==='artificial-analysis'?'Artificial Analysis':'OpenRouter'))+(k==='input'||k==='output'?(' · live $'+l.priceIn+' in / $'+l.priceOut+' out'):'');
+  return '';
+}
+
+function render(){
+ const columns=visibleColumns();
+ if(!columns.some(c=>c.key===sort)){sort='tb';desc=true}
+ const head=$('head');head.replaceChildren();const tr=document.createElement('tr');
+ for(const c of columns){
+   const th=document.createElement('th');th.className='mc-th'+(c.sub?' mc-th--sub':'')+(c.group?' mc-th--group':'');
+   const k=vkey(c.key),active=sort===k;
+   const b=document.createElement('button');b.textContent=c.label+(active?(desc?' ↓':' ↑'):'');
+   b.onclick=()=>{if(active)desc=!desc;else{sort=k;desc=!['name','provider'].includes(k)}render()};
+   th.append(b);
+   if(c.group){
+     const f=document.createElement('button');f.className='mc-fold';f.textContent=c.open?'▾':'▸';f.setAttribute('aria-expanded',String(c.open));f.setAttribute('aria-label',(c.open?'Collapse ':'Expand ')+c.label+' into more columns');
+     f.onclick=e=>{e.stopPropagation();c.open?expanded.delete(c.key):expanded.add(c.key);render()};
+     th.append(f);
+     const prim=SUB_META[c.primary]?.[0]||c.primary;
+     th.title=c.label+': shows '+prim+'. '+(c.open?'Collapse':'Open')+' for '+c.subs.filter(s=>s!==c.primary).map(s=>SUB_META[s]?.[0]||s).join(', ')+'.';
+   }
+   tr.append(th);
+ }
+ head.append(tr);
+
+ const body=$('body');body.replaceChildren();const list=current();
+ for(const r of list){
+   const row=document.createElement('tr');row.dataset.model=r.name;row.tabIndex=0;row.setAttribute('aria-selected',String(selectedName===r.name));
+   if(selectedName===r.name)row.classList.add('is-selected');
+   if(r.name===baselineName)row.classList.add('is-baseline');
+   if(pins.has(r.name))row.classList.add('pinned');
+   if(r.extra)row.classList.add('mc-extra');
+   row.onclick=()=>selectRow(r.name);row.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectRow(r.name)}};
+   for(const c of columns){
+     const k=vkey(c.key),td=document.createElement('td');td.textContent=fmt(r,k);
+     if(c.sub)td.classList.add('mc-sub');
+     if(c.key==='name'&&pins.has(r.name)){const star=document.createElement('span');star.className='star';star.textContent='★ ';td.prepend(star)}
+     if(c.key==='name'&&!liveOf(r)&&!r.extra){const m=document.createElement('span');m.className='mc-nomatch';m.textContent='no live match';td.append(m)}
+     const title=cellTitle(r,k);if(title)td.title=title;
+     const colour=comparisonStyle(r,k);if(colour){td.style.color=colour;td.classList.add('comparecell')}
+     row.append(td);
+   }
+   body.append(row);
+ }
+ $('baselineInfo').textContent='Baseline: '+baselineName+' · '+($('baselineOn').checked?'Comparison enabled':'Comparison disabled')+' · Pinned models stay visible and sort to the top.';
+ const unmatched=live.models&&live.models.length?data.filter(r=>!liveOf(r)).length:0;
+ $('status').textContent='Showing '+list.length+' of '+rows().length+' models'+(unmatched&&!$('includeAll').checked?' · '+unmatched+' of my rows have no live match':'')+' · Click row to select · Click column heading to sort · ▸ opens a column into more';
+ $('intensityLabel').textContent=$('colourIntensity').value+'%';
+ selectionToolbar();savePreferences();
+}
+
 function selectRow(name){selectedName=selectedName===name?null:name;render()}
 function redraw(){drawFilters();drawColumns();render()}
-const baseSelect=$('baseSelect');for(const r of [...data].sort((a,b)=>a.name.localeCompare(b.name))){const option=document.createElement('option');option.value=r.name;option.textContent=r.name;baseSelect.append(option)}
-readPreferences();baseSelect.value=baselineName;
-baseSelect.onchange=()=>{baselineName=baseSelect.value;redraw()};
-$('setBase').onclick=()=>{if(!selectedName)return;baselineName=selectedName;baseSelect.value=baselineName;$('baselineOn').checked=true;redraw()};
+function drawFiltersIfReady(){try{drawFilters()}catch(e){}}
+
+function drawBaseSelect(){
+ const sel=$('baseSelect');const keep=sel.value;
+ sel.replaceChildren();
+ for(const r of [...rows()].sort((a,b)=>a.name.localeCompare(b.name))){const option=document.createElement('option');option.value=r.name;option.textContent=r.name;sel.append(option)}
+ sel.value=rows().some(r=>r.name===keep)?keep:(rows().some(r=>r.name===baselineName)?baselineName:defaultBaseline);
+}
+
+// ── Preferences ─────────────────────────────────────────────────────
+function readPreferences(){
+ try{const p=JSON.parse(localStorage.getItem(PREFS)||'null');if(!p)return;
+  if(typeof p.baseline==='string')baselineName=p.baseline;
+  if(Array.isArray(p.pins))pins=new Set(p.pins);
+  if(p.columns&&typeof p.columns==='object')for(const k of ALL_KEYS)if(typeof p.columns[k]==='boolean')columnVisibility[k]=p.columns[k];
+  if(Array.isArray(p.expanded))expanded=new Set(p.expanded.filter(k=>COLUMNS.some(c=>c.key===k)));
+  if(['relative','absolute','none'].includes(p.colour))$('colourMode').value=p.colour;
+  if(Number.isFinite(p.intensity))$('colourIntensity').value=Math.min(100,Math.max(0,p.intensity));
+  if(typeof p.enabled==='boolean')$('baselineOn').checked=p.enabled;
+  if(typeof p.onlyPins==='boolean')$('onlyPins').checked=p.onlyPins;
+  if(typeof p.includeAll==='boolean')$('includeAll').checked=p.includeAll;
+  if(Array.isArray(p.filters))activeFilters=p.filters.filter(f=>filterFields.some(x=>x.id===f.field)&&typeof f.operator==='string'&&Array.isArray(f.values)).map(f=>({...f,id:++seq}));
+  if(typeof p.search==='string')$('search').value=p.search;
+ }catch(e){console.warn('Could not restore preferences',e)}
+}
+function savePreferences(){
+ try{localStorage.setItem(PREFS,JSON.stringify({baseline:baselineName,pins:[...pins],columns:columnVisibility,expanded:[...expanded],colour:$('colourMode').value,intensity:Number($('colourIntensity').value),enabled:$('baselineOn').checked,onlyPins:$('onlyPins').checked,includeAll:$('includeAll').checked,filters:activeFilters,search:$('search').value}))}catch(e){}
+}
+
+// ── Wiring ──────────────────────────────────────────────────────────
+readPreferences();
+drawBaseSelect();
+$('baseSelect').value=rows().some(r=>r.name===baselineName)?baselineName:defaultBaseline;
+$('baseSelect').onchange=()=>{baselineName=$('baseSelect').value;redraw()};
+$('setBase').onclick=()=>{if(!selectedName)return;baselineName=selectedName;$('baseSelect').value=baselineName;$('baselineOn').checked=true;redraw()};
 $('pinSelected').onclick=()=>{if(!selectedName)return;pins.has(selectedName)?pins.delete(selectedName):pins.add(selectedName);render()};
 $('clearSelection').onclick=()=>{selectedName=null;render()};
 $('columnsToggle').onclick=()=>{const m=$('colsMenu');m.hidden=!m.hidden;$('columnsToggle').setAttribute('aria-expanded',String(!m.hidden))};
 $('clearFilters').onclick=()=>{$('search').value='';$('onlyPins').checked=false;activeFilters=[];redraw()};
-$('reset').onclick=()=>{$('search').value='';$('mode').value='blended';$('baselineOn').checked=true;$('colourMode').value='relative';$('colourIntensity').value=65;$('onlyPins').checked=false;baselineName=defaultBaseline;baseSelect.value=baselineName;selectedName=null;activeFilters=[];for(const k of Object.keys(columnVisibility))columnVisibility[k]=true;sort='tb';desc=true;redraw()};
-for(const id of ['search','mode','baselineOn','onlyPins','colourMode','colourIntensity'])$(id).addEventListener('input',()=>{if(id==='baselineOn')drawFilters();render()});
-$('csv').onclick=()=>{const columns=cols(),quote=x=>'"'+String(x).replaceAll('"','""')+'"',lines=[columns.map(c=>quote(c[1])).join(',')];for(const r of current())lines.push(columns.map(c=>quote(fmt(r,c[0]))).join(','));const url=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='ai-model-comparison.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+$('reset').onclick=()=>{$('search').value='';$('baselineOn').checked=true;$('colourMode').value='relative';$('colourIntensity').value=65;$('onlyPins').checked=false;$('includeAll').checked=false;baselineName=defaultBaseline;$('baseSelect').value=baselineName;selectedName=null;activeFilters=[];expanded.clear();for(const k of ALL_KEYS)columnVisibility[k]=true;sort='tb';desc=true;redraw()};
+for(const id of ['search','baselineOn','onlyPins','colourMode','colourIntensity'])$(id).addEventListener('input',()=>{if(id==='baselineOn')drawFilters();render()});
+$('includeAll').addEventListener('input',()=>{drawBaseSelect();render()});
+$('refresh').onclick=()=>loadLive(true);
+$('csv').onclick=()=>{const columns=visibleColumns(),quote=x=>'"'+String(x).replaceAll('"','""')+'"',lines=[columns.map(c=>quote(c.label)).join(',')];for(const r of current())lines.push(columns.map(c=>quote(fmt(r,vkey(c.key)))).join(','));const url=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='ai-model-comparison.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+
 redraw();
+loadLive(false);
+// Refresh the live numbers whenever the page comes back to the front, at most
+// once every ten minutes, so opening it in the morning is already current.
+let lastAuto=0;
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-lastAuto>600000){lastAuto=Date.now();loadLive(false)}});
 </script></body></html>

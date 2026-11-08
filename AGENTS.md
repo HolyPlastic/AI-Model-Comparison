@@ -14,12 +14,21 @@ Maintain a single interactive comparison of AI coding models available through O
 | Source | What it gives | Reached by |
 |---|---|---|
 | Artificial Analysis | intelligence index, engineering index, prices, tok/s, TTFT | server only (`live.mjs`), key from `~/.claude/static/hermes-config.json` (`artificialAnalysisApiKey`) or `AA_API_KEY` |
-| OpenRouter | context window, max output, tool support, cache-hit price, fallback prices | server (CORS-open, but kept server-side so there is one join) |
-| my hand-kept data | provider, TB4, DeepSWE, Go allowance, my own reference prices | inline in the page |
+| OpenRouter | context window, max output, tool support, cache-hit price, fallback prices | server |
+| Terminal-Bench 4.0 | resolution rate per model, with the agent, effort and run date | server, parsed from the page payload (below) |
+| DeepSWE | pass@1 per model, with the harness and effort | server, public JSON |
+| my hand-kept data | provider, Go allowance, my own reference prices, TB4/DeepSWE where no live row exists | inline in the page |
 
 - **The legacy endpoint `/api/v2/data/llms/models` was retired 4 November 2026 and returns 410 Gone.** The replacement is `/api/v2/language/models/free` (paginated, 200 rows per page). Do not restore the old path.
 - The free access level returns **no coding index and no agentic index** for any model (the fields exist and are null). It does return the intelligence index and the domain indices (engineering, legal, health, finance, strategy, economics). That is why the page shows Intel and Engineering and not Code/Agentic. Pro is a paid tier; do not claim those columns work without it.
-- LMArena was dropped as a source: the Hugging Face mirror stops at 2025 (top entry Gemini 2.5 Pro), so its Elo would contradict every 2026 row.
+- **Terminal-Bench has no JSON endpoint.** Its leaderboard rows are embedded in the page's Next.js flight payload; `live.mjs` joins the `self.__next_f` chunks and pulls the rows array out. Validation is strict and a parse failure falls back to the cached copy. If tbench.ai changes its payload shape, that function is the only thing to fix.
+- **DeepSWE is a real JSON artifact** (`deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json`) but it is generated in batches, not on every request. Always show its own `generated_at`, never the fetch time, when judging how current the number is.
+- LMArena was dropped as a source: the Hugging Face mirror stops at 2025 (top entry Gemini 2.5 Pro), and arena.ai refuses direct fetches. Its Elo would contradict every 2026 row.
+
+## Name matching (read before touching the join)
+One normaliser, plus a second key with the vendor or family prefix removed, because every source spells a model differently (`Claude Opus 5.5 (Max, Default Fallback)`, `openai/gpt-6.1-sol`, `Opus 5.5`, `gpt-6-astra`, `Tencent Hy4`, `Hy4 Preview`).
+
+**A stripped key is only produced when what remains starts with a letter.** Without that rule `Qwen3.8 Flash` degraded to `38flash` and silently inherited Gemini 3.8 Flash's Terminal-Bench and DeepSWE scores. That collision really happened. Any change to `keys()` needs a check that no two distinct models collapse onto one key.
 
 ## Price policy
 - The Cost column takes the **Artificial Analysis standard list price**, falling back to OpenRouter where AA has none. AA lists the vendor's rate; OpenRouter's model-level price is the cheapest partner listing and is frequently half, so it must not drive the comparison.
@@ -28,6 +37,7 @@ Maintain a single interactive comparison of AI coding models available through O
 
 ## Must preserve
 - Clickable table column headings to sort in both directions, with null values always last.
+- **Live wins, hand-kept data is the fallback**: TB4 and DeepSWE show the live row when one matches the model, and my hand-entered figure when none does. The cell tooltip always names which it is, the agent or harness, the effort, and the date, and quotes my figure when the two disagree.
 - Provider multi-filter (OpenCode Go, ChatGPT Plus, Claude Max), model search, and benchmark filter.
 - **Fold-out columns**: a group header expands in place into its sub-columns. The parent shows the primary value, so the primary is never repeated as a sub-column (that repeat is what made earlier expandable columns read as ghost columns). Fold state persists.
 - Clickable row selection with Use as baseline, Pin/Unpin, and Deselect actions.

@@ -79,8 +79,9 @@ function drawLiveBar(){
   if(live.error){text.textContent='Live numbers unavailable: '+live.error;counts.textContent='';return}
   if(!live.generated_at){text.textContent='Loading live numbers…';counts.textContent='';return}
   const when=new Date(live.generated_at),mm=String(when.getMinutes()).padStart(2,'0');
-  text.innerHTML='Live <b>'+when.getHours()+':'+mm+'</b>'+(stale?' · <b style="color:var(--warn)">last good copy</b>':'')+(aa.error?' · AA: '+aa.error:'')+(or.error?' · OpenRouter: '+or.error:'');
-  counts.textContent=(aa.count||0)+' AA rows · '+(or.count||0)+' OpenRouter models · '+(live.models||[]).length+' merged';
+  const errs=['aa','openrouter','tb','swe'].filter(k=>src[k]?.error).map(k=>({aa:'AA',openrouter:'OpenRouter',tb:'Terminal-Bench',swe:'DeepSWE'})[k]+': '+src[k].error);
+  text.innerHTML='Live <b>'+when.getHours()+':'+mm+'</b>'+(stale?' · <b style="color:var(--warn)">last good copy</b>':'')+(errs.length?' · '+errs.join(' · '):'');
+  counts.textContent=(aa.count||0)+' AA rows · '+(or.count||0)+' OpenRouter · '+(src.tb?.count||0)+' Terminal-Bench · '+(src.swe?.count||0)+' DeepSWE';
 }
 
 async function loadLive(force){
@@ -149,7 +150,7 @@ const pick=(r,liveKey,handKey)=>liveOf(r)&&liveOf(r)[liveKey]!=null?liveOf(r)[li
 const costIn=r=>pick(r,'priceIn','input');
 const costOut=r=>pick(r,'priceOut','output');
 const blend=r=>{const i=costIn(r),o=costOut(r);return i==null||o==null?null:(3*i+o)/4};
-const raw=(r,k)=>({blend:blend(r),cachehit:liveOf(r)?.cacheHit??null,myin:r.input??null,myout:r.output??null,intel:liveOf(r)?.intel??null,eng:liveOf(r)?.eng??null,ctx:liveOf(r)?.ctx??null,maxout:liveOf(r)?.maxOut??null,tps:liveOf(r)?.tps??null,ttft:liveOf(r)?.ttft??null,input:costIn(r),output:costOut(r)}[k]??r[k]);
+const raw=(r,k)=>({blend:blend(r),cachehit:liveOf(r)?.cacheHit??null,myin:r.input??null,myout:r.output??null,intel:liveOf(r)?.intel??null,eng:liveOf(r)?.eng??null,ctx:liveOf(r)?.ctx??null,maxout:liveOf(r)?.maxOut??null,tps:liveOf(r)?.tps??null,ttft:liveOf(r)?.ttft??null,input:costIn(r),output:costOut(r),tb:liveOf(r)?.tb??r.tb??null,swe:liveOf(r)?.swe??r.swe??null}[k]??r[k]);
 const ratioKey={ratio:'blend',ix:'input',ox:'output'};
 const baselineRow=()=>rows().find(r=>r.name===baselineName)||rows().find(r=>r.name===defaultBaseline)||null;
 function v(r,k){const target=ratioKey[k];if(!target)return raw(r,k);const x=raw(r,target),b=raw(baselineRow(),target);return !$('baselineOn').checked||x==null||b==null||b<=0?null:x/b}
@@ -268,7 +269,17 @@ function selectionToolbar(){const r=rows().find(x=>x.name===selectedName);$('sel
 
 function cellTitle(r,k){
   const l=liveOf(r);
-  if(k==='name'&&!l&&!r.extra)return 'No live match in Artificial Analysis or OpenRouter for "'+r.name+'". The name spellings differ; rename my row or ignore it.';
+  if(k==='name'&&!l&&!r.extra)return 'No live match in any source for "'+r.name+'". The name spellings differ, or the model is not listed anywhere any more. Rename my row or retire it.';
+  if(k==='tb'){
+    if(l&&l.tb!=null)return 'Terminal-Bench 4.0 resolution rate, '+l.tb+'% · run with '+l.tbAgent+' at '+(l.tbEffort||'default')+' effort · '+l.tbDate+(r.tb!=null&&Math.abs(r.tb-l.tb)>0.05?' · my hand-entered figure was '+r.tb:'')+' · tbench.ai';
+    if(r.tb!=null)return 'My hand-entered TB4 figure: '+r.tb+'. No live Terminal-Bench row matches this model.';
+    return '';
+  }
+  if(k==='swe'){
+    if(l&&l.swe!=null)return 'DeepSWE pass@1, '+l.swe+'% · '+l.sweHarness+' at '+(l.sweEffort||'default')+' effort · data generated '+(live.sources?.swe?.generated_at||'unknown')+(r.swe!=null&&Math.abs(r.swe-l.swe)>0.05?' · my hand-entered figure was '+r.swe:'')+' · deepswe.datacurve.ai';
+    if(r.swe!=null)return 'My hand-entered DeepSWE figure: '+r.swe+'. No live DeepSWE row matches this model.';
+    return '';
+  }
   if(['intel','eng'].includes(k)&&l)return (k==='intel'?'Artificial Analysis intelligence index':'Artificial Analysis engineering index')+' · '+l.aaName+(l.variants>1?' · best of '+l.variants+' effort variants':'');
   if(['ctx','maxout'].includes(k)&&l)return (k==='ctx'?'Context window':'Max output tokens')+' · OpenRouter'+(l.ctx==null&&k==='ctx'?' (not listed)':'');
   if(['tps','ttft'].includes(k)&&l)return (k==='tps'?'Median output tokens per second':'Median time to first token, seconds')+' · Artificial Analysis';

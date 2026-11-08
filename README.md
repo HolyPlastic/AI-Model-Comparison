@@ -21,11 +21,13 @@ Double-click **`+_START_+.bat`**. It starts the local helper if it is not alread
 | Live, refreshed on demand | Mine, hand-kept |
 |---|---|
 | Intelligence index, Engineering index (Artificial Analysis) | Provider (OpenCode Go / ChatGPT Plus / Claude Max) |
-| Standard list price in/out, cache-hit price | TB4, DeepSWE |
-| Context window, max output, tool support (OpenRouter) | Go allowance |
-| Tokens per second, time to first token (AA) | My own reference prices (kept as sub-columns) |
+| Standard list price in/out, cache-hit price | Go allowance |
+| Context window, max output, tool support (OpenRouter) | My own reference prices (kept as sub-columns) |
+| Tokens per second, time to first token (AA) | TB4 and DeepSWE, only for models no live row covers |
+| Terminal-Bench 4.0 resolution rate, with agent and effort | |
+| DeepSWE pass@1, with harness and effort | |
 
-The free Artificial Analysis tier carries no coding or agentic index, which is why the page shows Intel and Engineering rather than Code and Agentic. Prices in the Cost column are the standard list rate; OpenRouter's cheapest partner listing is often half and would distort the comparison, so it is not used for money.
+The free Artificial Analysis tier carries no coding or agentic index, which is why the page shows Intel and Engineering rather than Code and Agentic. Prices in the Cost column are the standard list rate; OpenRouter's cheapest partner listing is often half and would distort the comparison, so it is not used for money. Terminal-Bench rows are read from the leaderboard page's own data payload; DeepSWE is a public JSON that is regenerated in batches, so its own generated date is shown rather than the fetch time.
 
 ## 🧰 Filters, comparisons, favourites and display
 

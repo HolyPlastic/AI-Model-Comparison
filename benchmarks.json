@@ -1,0 +1,129 @@
+{
+  "_note": "The one place column descriptions live. The page renders these in the header (short line) and in the hover panel (detail). Keys match the column keys in ai-model-comparison.html. 'live' marks a source that also publishes its own wording, which live.mjs attaches at the bottom of the hover panel.",
+  "columns": {
+    "name": {
+      "short": "Model",
+      "detail": "The model as the live catalogue names it, with the reasoning effort in the tooltip. A row marked 'no live match' means no source lists that name any more.",
+      "source": "Artificial Analysis, OpenRouter",
+      "url": "https://openrouter.ai/models"
+    },
+    "provider": {
+      "short": "Where I can reach it",
+      "detail": "OpenCode Go, ChatGPT Plus or Claude Max: the subscription I would actually use. These are not per-token API products.",
+      "source": "my own list",
+      "url": ""
+    },
+    "tb": {
+      "short": "Agent tasks in a real shell",
+      "detail": "Terminal-Bench 4.0. Each task is a piece of real work done in a shell, scored by whether the task's own tests pass. The live row is the strongest published run for that model; the tooltip names the agent, the effort and the run date. Where no live row exists the cell falls back to my hand-entered figure.",
+      "source": "Terminal-Bench 4.0, tbench.ai",
+      "url": "https://www.tbench.ai/",
+      "live": "tb"
+    },
+    "swe": {
+      "short": "Fixes real repo issues",
+      "detail": "DeepSWE. Software engineering tasks taken from real repositories, graded by hidden tests written for a reference solution. pass@1 is the share of attempts that passed; a context-window failure or a timeout counts as a failure. Regenerated in batches, so the tooltip shows the data's own generation date.",
+      "source": "DeepSWE, datacurve.ai",
+      "url": "https://www.deepswe.dev/",
+      "live": "swe"
+    },
+    "blend": {
+      "short": "Combined price, 3:1",
+      "detail": "(3 x input + output) / 4, in dollars per million tokens, uncached. This is a standard list price for comparison, not what a subscription costs me. Not Artificial Analysis's cache-aware 7:2:1 figure.",
+      "source": "Artificial Analysis standard list price",
+      "url": "https://artificialanalysis.ai/methodology"
+    },
+    "input": {
+      "short": "Per million tokens in",
+      "detail": "Standard list price for one million input tokens. Open the Cost column to see input and output apart; where none is published the cell is blank, never zero.",
+      "source": "Artificial Analysis",
+      "url": "https://artificialanalysis.ai/methodology"
+    },
+    "output": {
+      "short": "Per million tokens out",
+      "detail": "Standard list price for one million output tokens.",
+      "source": "Artificial Analysis",
+      "url": "https://artificialanalysis.ai/methodology"
+    },
+    "cachehit": {
+      "short": "Cached input price",
+      "detail": "What a cached input token costs, per million. Too often left out of comparisons, and it is the difference between an agent loop being cheap or ruinous.",
+      "source": "OpenRouter",
+      "url": "https://openrouter.ai/models"
+    },
+    "myin": {
+      "short": "My figure, input",
+      "detail": "The price I entered by hand, which for several models is a deliberate off-peak or discounted rate. Kept visible so the live standard price never silently replaces it.",
+      "source": "my own list",
+      "url": ""
+    },
+    "myout": {
+      "short": "My figure, output",
+      "detail": "The price I entered by hand, which for several models is a deliberate off-peak or discounted rate.",
+      "source": "my own list",
+      "url": ""
+    },
+    "ratio": {
+      "short": "Times the baseline",
+      "detail": "Combined price divided by the baseline model's combined price. Lower is cheaper. Unknown when comparison is off or the baseline has no price.",
+      "source": "derived from the Cost column",
+      "url": ""
+    },
+    "ix": {
+      "short": "Input vs baseline",
+      "detail": "Input price divided by the baseline's input price. Lower is cheaper.",
+      "source": "derived from the Cost column",
+      "url": ""
+    },
+    "ox": {
+      "short": "Output vs baseline",
+      "detail": "Output price divided by the baseline's output price. Lower is cheaper. Output is usually the bigger part of an agent's bill.",
+      "source": "derived from the Cost column",
+      "url": ""
+    },
+    "intel": {
+      "short": "General capability",
+      "detail": "Artificial Analysis Intelligence Index, a weighted composite of their benchmark suite. Higher is better. It is one number for the whole field, so it rewards breadth rather than the coding and shell work this table is mostly about.",
+      "source": "Artificial Analysis",
+      "url": "https://artificialanalysis.ai/methodology",
+      "live": "aa"
+    },
+    "eng": {
+      "short": "Engineering tasks",
+      "detail": "Artificial Analysis Engineering Index, a domain slice of the same suite. Closer to this table's subject than the composite, and the only second score their free access level publishes.",
+      "source": "Artificial Analysis",
+      "url": "https://artificialanalysis.ai/methodology",
+      "live": "aa"
+    },
+    "ctx": {
+      "short": "Context window",
+      "detail": "The context window the catalogue advertises, in tokens. Not a verified served window: the real limit can be lower, and a proxy in the middle can lower it again.",
+      "source": "OpenRouter",
+      "url": "https://openrouter.ai/models"
+    },
+    "maxout": {
+      "short": "Max output tokens",
+      "detail": "The largest single response the catalogue lists. Matters when a model has to rewrite a long file in one go.",
+      "source": "OpenRouter",
+      "url": "https://openrouter.ai/models"
+    },
+    "tps": {
+      "short": "Output speed",
+      "detail": "Median output tokens per second, measured by Artificial Analysis on each model's representative endpoint. Faster is better for interactive work; it says nothing about quality.",
+      "source": "Artificial Analysis",
+      "url": "https://artificialanalysis.ai/methodology"
+    },
+    "ttft": {
+      "short": "Wait for first token",
+      "detail": "Median seconds before the first token arrives. Lower is better. A high figure makes a fast model still feel slow to use.",
+      "source": "Artificial Analysis",
+      "url": "https://artificialanalysis.ai/methodology"
+    },
+    "allow": {
+      "short": "Monthly Go quota",
+      "detail": "The dollar-equivalent monthly usage cap on OpenCode Go. A quota, not an extra charge: exhausting it stops usage, it does not bill more.",
+      "source": "OpenCode Go",
+      "url": "https://opencode.ai/docs/go/"
+    }
+  }
+}

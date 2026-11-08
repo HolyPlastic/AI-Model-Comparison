@@ -25,13 +25,33 @@ td.mc-sub{background:#131c29;font-size:13px}
 tr:hover td.mc-sub{background:#1b2637}
 .mc-nomatch{color:var(--warn);cursor:help;font-size:11px;margin-left:6px}
 .mc-extra td:first-child{font-style:italic}
+/* ── collapsible cards, two-up row ─────────────────────────────────── */
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+@media(max-width:1000px){.card-row{grid-template-columns:1fr}}
+.controls-section>h2{margin:0}
+.card-head button{display:flex;align-items:center;gap:8px;width:100%;background:transparent;border:0;padding:0;cursor:pointer;font:inherit;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:left}
+.card-head button:hover{background:transparent;color:var(--text)}
+.card-head .chev{margin-left:auto;color:var(--accent);font-size:13px;line-height:1}
+.card-body{margin-top:10px}
+.card-body[hidden]{display:none}
+
+/* ── header help: short line in the header, full text on hover ─────── */
+.mc-hint{display:block;white-space:normal;width:150px;font-size:10.5px;line-height:1.3;font-weight:500;color:#8fa0b8;margin-top:4px;letter-spacing:0;text-transform:none;text-align:left}
+th.mc-th--sub .mc-hint{width:110px}
+th.mc-th--group .mc-hint{width:130px}
+#tip{position:fixed;z-index:400;max-width:370px;max-height:60vh;overflow:hidden;background:#0e1622;border:1px solid #4a5a72;border-radius:9px;padding:9px 11px;box-shadow:0 18px 44px #000c;font-size:12px;line-height:1.45;color:#dbe4f2;pointer-events:none;display:none}
+#tip[data-show="1"]{display:block}
+#tip .tip-src{display:block;margin-top:7px;padding-top:6px;border-top:1px solid #2a3547;font-size:10.5px;color:#8fa0b8}
+#tip .tip-mine{margin-top:6px;padding-top:6px;border-top:1px solid #2a3547;font-size:10.5px;color:#e8cf8f}
 </style></head><body><main><h1>📊 AI Model Comparison</h1><p>OpenCode Go · ChatGPT Plus · Claude Max · live scores from Artificial Analysis and OpenRouter</p>
 
 <div class="livebar" id="livebar"><span class="dot" id="liveDot"></span><span id="liveText">Live numbers not loaded yet</span><span class="sep"></span><span id="liveCounts"></span><span class="spacer"></span><button id="refresh" title="Re-fetch Artificial Analysis and OpenRouter now">↻ Refresh live</button></div>
 
-<section class="controls-section"><h2>🔎 Filters</h2><div class="control-row"><label for="search">Search <input id="search" type="search" placeholder="Search models…"></label><button id="clearFilters">Clear filters</button><label><input type="checkbox" id="onlyPins"> Favourites only</label><label><input type="checkbox" id="includeAll"> Include models not in my list</label></div><div id="filters" class="fb" role="toolbar" aria-label="Model filters"></div></section>
-<section class="controls-section"><h2>🎯 Comparison</h2><div class="control-row"><label>Baseline <select id="baseSelect" aria-label="Choose baseline model"></select></label><label><input type="checkbox" id="baselineOn" checked> Compare to baseline</label><span class="small">Baseline model is available even when filtered out.</span></div></section>
-<section class="controls-section"><h2>🎨 Display</h2><div class="control-row"><label>Colour <select id="colourMode"><option value="relative">Relative to baseline</option><option value="absolute">Absolute score gradients</option><option value="none">Off</option></select></label><label>Intensity <input id="colourIntensity" type="range" min="0" max="100" value="65" step="5"><output id="intensityLabel">65%</output></label><button id="columnsToggle" aria-expanded="false">☷ Columns</button><div id="colsMenu" hidden></div><button id="reset">↺ Reset view</button><button id="csv">↓ CSV export</button></div><p class="legend">Green = better, red = worse. Higher benchmark scores and lower API prices are better. Go allowance is not colour-ranked. Any column with a ▸ next to its name opens into more columns.</p></section>
+<div class="card-row">
+<section class="controls-section" data-card="filters"><h2 class="card-head"><button type="button" aria-expanded="true">🔎 Filters<span class="chev">▾</span></button></h2><div class="card-body"><div class="control-row"><label for="search">Search <input id="search" type="search" placeholder="Search models…"></label><button id="clearFilters">Clear filters</button><label><input type="checkbox" id="onlyPins"> Favourites only</label><label><input type="checkbox" id="includeAll"> Include models not in my list</label></div><div id="filters" class="fb" role="toolbar" aria-label="Model filters"></div></div></section>
+<section class="controls-section" data-card="comparison"><h2 class="card-head"><button type="button" aria-expanded="true">🎯 Comparison<span class="chev">▾</span></button></h2><div class="card-body"><div class="control-row"><label>Baseline <select id="baseSelect" aria-label="Choose baseline model"></select></label></div><div class="control-row" style="margin-top:8px"><label><input type="checkbox" id="baselineOn" checked> Compare to baseline</label></div><p class="small" style="margin:8px 0 0">The baseline model stays available even when filtered out.</p></div></section>
+</div>
+<section class="controls-section" data-card="display"><h2 class="card-head"><button type="button" aria-expanded="true">🎨 Display<span class="chev">▾</span></button></h2><div class="card-body"><div class="control-row"><label>Colour <select id="colourMode"><option value="relative">Relative to baseline</option><option value="absolute">Absolute score gradients</option><option value="none">Off</option></select></label><label>Intensity <input id="colourIntensity" type="range" min="0" max="100" value="65" step="5"><output id="intensityLabel">65%</output></label><button id="columnsToggle" aria-expanded="false">☷ Columns</button><button id="helpToggle" aria-pressed="false" title="Show a one-line description under each column heading">ⓘ Column help</button><div id="colsMenu" hidden></div><button id="reset">↺ Reset view</button><button id="csv">↓ CSV export</button></div><p class="legend">Green = better, red = worse. Higher benchmark scores and lower API prices are better. Go allowance is not colour-ranked. Any column with a ▸ next to its name opens into more columns. Hover any heading for the full description.</p></div></section>
 <div id="selectionbar" class="selectionbar" hidden><strong id="selectedLabel"></strong><button id="setBase">◎ Use as baseline</button><button id="pinSelected">☆ Pin model</button><button id="clearSelection">× Deselect</button></div><div id="baselineInfo" class="comparison-note"></div><div id="status"></div><div class="tablewrap"><table><thead id="head"></thead><tbody id="body"></tbody></table></div>
 <p class="note"><b>Working data, not verified:</b> TB4, DeepSWE, provider and Go allowance are transcribed from earlier research and are NOT independently verified here. Live columns (Intel, Engineering, Context, Max output, tok/s, TTFT, price) come from the sources named in each column heading at the moment shown in the live bar. Where a live price exists it takes over from the hand-entered price, and the cell says so on hover.</p>
 <p class="note"><b>Cost:</b> Combined = (3 × input + output) / 4 USD per million tokens, an uncached 3:1 blend. Relative cost multipliers use the selected baseline's price; lower is cheaper. Plus/Max API reference prices are NOT additional subscription charges. Go allowances are dollar-equivalent monthly quotas, not extra charges.</p>
@@ -141,6 +161,98 @@ const filterFields=[
 let activeFilters=[],seq=0,pop=null,sort='tb',desc=true,selectedName=null,baselineName=defaultBaseline,pins=new Set();
 let columnVisibility=Object.fromEntries(ALL_KEYS.map(k=>[k,true]));
 let expanded=new Set();
+let collapsed=new Set();
+
+// ── Column help ─────────────────────────────────────────────────────
+// The descriptions live in benchmarks.json, one place. Each source's own
+// wording for its own metric is attached live, so a definition cannot drift
+// away from the thing that defines it. Short line goes in the header, the full
+// text goes in the hover panel.
+let HELP={},helpOn=false,helpOnSet=false;
+
+async function loadHelp(){
+  try{
+    const r=await fetch('benchmarks.json',{cache:'no-cache'});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    HELP=(await r.json()).columns||{};
+    // The short line is meant to be there by default; the toggle is for
+    // turning it off. A saved preference always wins.
+    if(!helpOnSet)helpOn=true;
+    $('helpToggle').disabled=false;
+  }catch(e){
+    HELP={};helpOn=false;
+    $('helpToggle').disabled=true;
+    $('helpToggle').title='Column help needs the local helper (benchmarks.json is served by it)';
+  }
+  $('helpToggle').setAttribute('aria-pressed',String(helpOn));
+  $('helpToggle').classList.toggle('on',helpOn);
+  render();
+}
+
+function liveNote(k){
+  const n=(live&&live.notes)||{};
+  if(k==='tb'&&n.tb&&n.tb.tagline)return 'Terminal-Bench in its own words: “'+n.tb.tagline+'”';
+  if(k==='swe'&&n.swe&&n.swe.unit)return 'DeepSWE in its own words: “'+n.swe.unit+'”';
+  if((k==='intel'||k==='eng')&&n.aa&&n.aa.index_version)return 'Index version '+n.aa.index_version+' at the last fetch.';
+  return '';
+}
+function headerTip(k){
+  const h=HELP[k];const lines=[];
+  if(h&&h.detail)lines.push(h.detail);
+  const note=liveNote(k);if(note)lines.push(note);
+  const src=[h&&h.source,h&&h.url].filter(Boolean).join(' · ');
+  if(src)lines.push('· '+src);
+  return lines.join('\n');
+}
+
+// ── Hover panel ─────────────────────────────────────────────────────
+// Replaces the browser's default tooltip everywhere on the page. One element,
+// positioned next to whatever is being hovered, styled like the rest of the table.
+const tipEl=document.createElement('div');
+tipEl.id='tip';document.body.append(tipEl);
+
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function showTip(el){
+  const text=el.dataset.tip;
+  if(!text)return;
+  const html=text.split('\n').map(line=>{
+    if(line.startsWith('· mine'))return '<span class="tip-mine">'+esc(line.slice(2))+'</span>';
+    if(line.startsWith('· '))return '<span class="tip-src">'+esc(line.slice(2))+'</span>';
+    return esc(line);
+  }).join('<br>');
+  tipEl.innerHTML=html;
+  tipEl.dataset.show='1';
+  const r=el.getBoundingClientRect(),t=tipEl.getBoundingClientRect();
+  const left=Math.max(8,Math.min(r.left,r.left+r.width/2-t.width/2,innerWidth-t.width-8));
+  const below=r.bottom+8;
+  const top=below+t.height<innerHeight-8?below:Math.max(8,r.top-t.height-8);
+  tipEl.style.left=left+'px';tipEl.style.top=top+'px';
+}
+function hideTip(){tipEl.dataset.show='0'}
+document.addEventListener('pointerover',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');if(el)showTip(el)});
+document.addEventListener('pointerout',e=>{if(e.target.closest&&e.target.closest('[data-tip]'))hideTip()});
+window.addEventListener('scroll',hideTip,true);
+window.addEventListener('resize',hideTip);
+
+// ── Collapsible cards ───────────────────────────────────────────────
+const CARDS=[...document.querySelectorAll('.controls-section[data-card]')];
+function applyCards(){
+  for(const sec of CARDS){
+    const isC=collapsed.has(sec.dataset.card);
+    const btn=sec.querySelector('.card-head button');
+    btn.setAttribute('aria-expanded',String(!isC));
+    const chev=btn.querySelector('.chev');if(chev)chev.textContent=isC?'▸':'▾';
+    const body=sec.querySelector('.card-body');if(body)body.hidden=isC;
+  }
+}
+for(const sec of CARDS){
+  sec.querySelector('.card-head button').addEventListener('click',()=>{
+    const k=sec.dataset.card;
+    collapsed.has(k)?collapsed.delete(k):collapsed.add(k);
+    applyCards();savePreferences();
+  });
+}
 
 // ── Value resolution ────────────────────────────────────────────────
 // Live wins where live exists. A missing live number is never 0, and never
@@ -269,24 +381,34 @@ function selectionToolbar(){const r=rows().find(x=>x.name===selectedName);$('sel
 
 function cellTitle(r,k){
   const l=liveOf(r);
-  if(k==='name'&&!l&&!r.extra)return 'No live match in any source for "'+r.name+'". The name spellings differ, or the model is not listed anywhere any more. Rename my row or retire it.';
+  if(k==='name'&&!l&&!r.extra)return 'No live match in any source for "'+r.name+'"\nThe name spellings differ, or the model is not listed anywhere any more.\n· mine: rename the row or retire it';
   if(k==='tb'){
-    if(l&&l.tb!=null)return 'Terminal-Bench 4.0 resolution rate, '+l.tb+'% · run with '+l.tbAgent+' at '+(l.tbEffort||'default')+' effort · '+l.tbDate+(r.tb!=null&&Math.abs(r.tb-l.tb)>0.05?' · my hand-entered figure was '+r.tb:'')+' · tbench.ai';
-    if(r.tb!=null)return 'My hand-entered TB4 figure: '+r.tb+'. No live Terminal-Bench row matches this model.';
+    if(l&&l.tb!=null)return ['Terminal-Bench 4.0: '+l.tb+'% of tasks passed',
+      'run with '+l.tbAgent+' at '+(l.tbEffort||'default')+' effort, '+l.tbDate,
+      r.tb!=null&&Math.abs(r.tb-l.tb)>0.05?'· mine: '+r.tb:'',
+      (helpSource('tb')?'· '+helpSource('tb'):'')].filter(Boolean).join('\n');
+    if(r.tb!=null)return 'My hand-entered TB4 figure: '+r.tb+'\nNo live Terminal-Bench row matches this model.';
     return '';
   }
   if(k==='swe'){
-    if(l&&l.swe!=null)return 'DeepSWE pass@1, '+l.swe+'% · '+l.sweHarness+' at '+(l.sweEffort||'default')+' effort · data generated '+(live.sources?.swe?.generated_at||'unknown')+(r.swe!=null&&Math.abs(r.swe-l.swe)>0.05?' · my hand-entered figure was '+r.swe:'')+' · deepswe.datacurve.ai';
-    if(r.swe!=null)return 'My hand-entered DeepSWE figure: '+r.swe+'. No live DeepSWE row matches this model.';
+    if(l&&l.swe!=null)return ['DeepSWE pass@1: '+l.swe+'%',
+      l.sweHarness+' at '+(l.sweEffort||'default')+' effort',
+      'data generated '+(live.sources?.swe?.generated_at||'unknown'),
+      r.swe!=null&&Math.abs(r.swe-l.swe)>0.05?'· mine: '+r.swe:'',
+      (helpSource('swe')?'· '+helpSource('swe'):'')].filter(Boolean).join('\n');
+    if(r.swe!=null)return 'My hand-entered DeepSWE figure: '+r.swe+'\nNo live DeepSWE row matches this model.';
     return '';
   }
-  if(['intel','eng'].includes(k)&&l)return (k==='intel'?'Artificial Analysis intelligence index':'Artificial Analysis engineering index')+' · '+l.aaName+(l.variants>1?' · best of '+l.variants+' effort variants':'');
-  if(['ctx','maxout'].includes(k)&&l)return (k==='ctx'?'Context window':'Max output tokens')+' · OpenRouter'+(l.ctx==null&&k==='ctx'?' (not listed)':'');
-  if(['tps','ttft'].includes(k)&&l)return (k==='tps'?'Median output tokens per second':'Median time to first token, seconds')+' · Artificial Analysis';
-  if(k==='blend'&&l)return 'Combined 3:1 price per million tokens, $'+(+blend(r)).toFixed(4)+' · standard list price from '+(l.priceSource==='artificial-analysis'?'Artificial Analysis':'OpenRouter')+' · open the Cost column for input, output, cache-hit and my own figures';
-  if(['input','output','cachehit','myin','myout'].includes(k)&&l)return (k==='cachehit'?'Cached input price per million tokens · OpenRouter':k.startsWith('my')?'My hand-entered reference price (off-peak or discounted where I knew it); the live Cost column uses the standard list price':'Standard list price per million tokens · '+(l.priceSource==='artificial-analysis'?'Artificial Analysis':'OpenRouter'))+(k==='input'||k==='output'?(' · live $'+l.priceIn+' in / $'+l.priceOut+' out'):'');
+  if(['intel','eng'].includes(k)&&l)return (k==='intel'?'Artificial Analysis intelligence index':'Artificial Analysis engineering index')+'\n'+l.aaName+(l.variants>1?' (best of '+l.variants+' effort variants)':'')+(helpSource(k)?'\n· '+helpSource(k):'');
+  if(['ctx','maxout'].includes(k)&&l)return (k==='ctx'?'Context window':'Max output tokens')+'\n· OpenRouter'+(l.ctx==null&&k==='ctx'?' (not listed)':'');
+  if(['tps','ttft'].includes(k)&&l)return (k==='tps'?'Median output tokens per second':'Median time to first token, seconds')+'\n· Artificial Analysis';
+  if(k==='blend'&&l)return ['Combined 3:1 price: $'+(+blend(r)).toFixed(4)+' per million tokens','standard list price from '+(l.priceSource==='artificial-analysis'?'Artificial Analysis':'OpenRouter'),'· open the Cost column for input, output, cache-hit and my own figures'].join('\n');
+  if(['input','output','cachehit','myin','myout'].includes(k)&&l)return (k==='cachehit'?'Cached input price per million tokens\n· OpenRouter':k.startsWith('my')?'My hand-entered reference price\n· off-peak or discounted where I knew it; the Cost column uses the standard list price':'Standard list price per million tokens\n· '+(l.priceSource==='artificial-analysis'?'Artificial Analysis':'OpenRouter'))+(k==='input'||k==='output'?('\n· live: $'+l.priceIn+' in / $'+l.priceOut+' out'):'');
   return '';
 }
+
+const helpSource=k=>{const h=HELP[k];return h?[h.source,h.url].filter(Boolean).join(' · '):''}
+
 
 function render(){
  const columns=visibleColumns();
@@ -298,13 +420,13 @@ function render(){
    const b=document.createElement('button');b.textContent=c.label+(active?(desc?' ↓':' ↑'):'');
    b.onclick=()=>{if(active)desc=!desc;else{sort=k;desc=!['name','provider'].includes(k)}render()};
    th.append(b);
+   if(helpOn&&k!=='name'&&HELP[k]&&HELP[k].short){const hint=document.createElement('span');hint.className='mc-hint';hint.textContent=HELP[k].short;th.append(hint)}
    if(c.group){
      const f=document.createElement('button');f.className='mc-fold';f.textContent=c.open?'▾':'▸';f.setAttribute('aria-expanded',String(c.open));f.setAttribute('aria-label',(c.open?'Collapse ':'Expand ')+c.label+' into more columns');
      f.onclick=e=>{e.stopPropagation();c.open?expanded.delete(c.key):expanded.add(c.key);render()};
      th.append(f);
-     const prim=SUB_META[c.primary]?.[0]||c.primary;
-     th.title=c.label+': shows '+prim+'. '+(c.open?'Collapse':'Open')+' for '+c.subs.filter(s=>s!==c.primary).map(s=>SUB_META[s]?.[0]||s).join(', ')+'.';
    }
+   const htip=headerTip(k);if(htip)th.dataset.tip=htip;
    tr.append(th);
  }
  head.append(tr);
@@ -322,7 +444,7 @@ function render(){
      if(c.sub)td.classList.add('mc-sub');
      if(c.key==='name'&&pins.has(r.name)){const star=document.createElement('span');star.className='star';star.textContent='★ ';td.prepend(star)}
      if(c.key==='name'&&!liveOf(r)&&!r.extra){const m=document.createElement('span');m.className='mc-nomatch';m.textContent='no live match';td.append(m)}
-     const title=cellTitle(r,k);if(title)td.title=title;
+     const title=cellTitle(r,k);if(title)td.dataset.tip=title;
      const colour=comparisonStyle(r,k);if(colour){td.style.color=colour;td.classList.add('comparecell')}
      row.append(td);
    }
@@ -353,6 +475,8 @@ function readPreferences(){
   if(Array.isArray(p.pins))pins=new Set(p.pins);
   if(p.columns&&typeof p.columns==='object')for(const k of ALL_KEYS)if(typeof p.columns[k]==='boolean')columnVisibility[k]=p.columns[k];
   if(Array.isArray(p.expanded))expanded=new Set(p.expanded.filter(k=>COLUMNS.some(c=>c.key===k)));
+  if(Array.isArray(p.collapsed))collapsed=new Set(p.collapsed.filter(k=>['filters','comparison','display'].includes(k)));
+  if(typeof p.helpOn==='boolean'){helpOn=p.helpOn;helpOnSet=true}
   if(['relative','absolute','none'].includes(p.colour))$('colourMode').value=p.colour;
   if(Number.isFinite(p.intensity))$('colourIntensity').value=Math.min(100,Math.max(0,p.intensity));
   if(typeof p.enabled==='boolean')$('baselineOn').checked=p.enabled;
@@ -363,7 +487,7 @@ function readPreferences(){
  }catch(e){console.warn('Could not restore preferences',e)}
 }
 function savePreferences(){
- try{localStorage.setItem(PREFS,JSON.stringify({baseline:baselineName,pins:[...pins],columns:columnVisibility,expanded:[...expanded],colour:$('colourMode').value,intensity:Number($('colourIntensity').value),enabled:$('baselineOn').checked,onlyPins:$('onlyPins').checked,includeAll:$('includeAll').checked,filters:activeFilters,search:$('search').value}))}catch(e){}
+ try{localStorage.setItem(PREFS,JSON.stringify({baseline:baselineName,pins:[...pins],columns:columnVisibility,expanded:[...expanded],collapsed:[...collapsed],helpOn,colour:$('colourMode').value,intensity:Number($('colourIntensity').value),enabled:$('baselineOn').checked,onlyPins:$('onlyPins').checked,includeAll:$('includeAll').checked,filters:activeFilters,search:$('search').value}))}catch(e){}
 }
 
 // ── Wiring ──────────────────────────────────────────────────────────
@@ -375,14 +499,17 @@ $('setBase').onclick=()=>{if(!selectedName)return;baselineName=selectedName;$('b
 $('pinSelected').onclick=()=>{if(!selectedName)return;pins.has(selectedName)?pins.delete(selectedName):pins.add(selectedName);render()};
 $('clearSelection').onclick=()=>{selectedName=null;render()};
 $('columnsToggle').onclick=()=>{const m=$('colsMenu');m.hidden=!m.hidden;$('columnsToggle').setAttribute('aria-expanded',String(!m.hidden))};
+$('helpToggle').onclick=()=>{helpOn=!helpOn;$('helpToggle').setAttribute('aria-pressed',String(helpOn));$('helpToggle').classList.toggle('on',helpOn);render()};
 $('clearFilters').onclick=()=>{$('search').value='';$('onlyPins').checked=false;activeFilters=[];redraw()};
-$('reset').onclick=()=>{$('search').value='';$('baselineOn').checked=true;$('colourMode').value='relative';$('colourIntensity').value=65;$('onlyPins').checked=false;$('includeAll').checked=false;baselineName=defaultBaseline;$('baseSelect').value=baselineName;selectedName=null;activeFilters=[];expanded.clear();for(const k of ALL_KEYS)columnVisibility[k]=true;sort='tb';desc=true;redraw()};
+$('reset').onclick=()=>{$('search').value='';$('baselineOn').checked=true;$('colourMode').value='relative';$('colourIntensity').value=65;$('onlyPins').checked=false;$('includeAll').checked=false;baselineName=defaultBaseline;$('baseSelect').value=baselineName;selectedName=null;activeFilters=[];expanded.clear();collapsed.clear();helpOn=false;$('helpToggle').setAttribute('aria-pressed','false');$('helpToggle').classList.remove('on');applyCards();for(const k of ALL_KEYS)columnVisibility[k]=true;sort='tb';desc=true;redraw()};
 for(const id of ['search','baselineOn','onlyPins','colourMode','colourIntensity'])$(id).addEventListener('input',()=>{if(id==='baselineOn')drawFilters();render()});
 $('includeAll').addEventListener('input',()=>{drawBaseSelect();render()});
 $('refresh').onclick=()=>loadLive(true);
 $('csv').onclick=()=>{const columns=visibleColumns(),quote=x=>'"'+String(x).replaceAll('"','""')+'"',lines=[columns.map(c=>quote(c.label)).join(',')];for(const r of current())lines.push(columns.map(c=>quote(fmt(r,vkey(c.key)))).join(','));const url=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='ai-model-comparison.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 
+applyCards();
 redraw();
+loadHelp();
 loadLive(false);
 // Refresh the live numbers whenever the page comes back to the front, at most
 // once every ten minutes, so opening it in the morning is already current.

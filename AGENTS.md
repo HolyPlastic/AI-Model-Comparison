@@ -25,6 +25,17 @@ Maintain a single interactive comparison of AI coding models available through O
 - **DeepSWE is a real JSON artifact** (`deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json`) but it is generated in batches, not on every request. Always show its own `generated_at`, never the fetch time, when judging how current the number is.
 - LMArena was dropped as a source: the Hugging Face mirror stops at 2025 (top entry Gemini 2.5 Pro), and arena.ai refuses direct fetches. Its Elo would contradict every 2026 row.
 
+## Column descriptions and the hover panel
+- **`benchmarks.json` is the one place a column description lives.** Short line for the header, `detail` for the hover panel, plus `source` and `url`. Keys match the column keys in the page.
+- Where a source publishes its own wording, `live.mjs` attaches it under `notes` (Terminal-Bench's readme tagline, DeepSWE's `scope` and `unit`, Artificial Analysis's index version) and the page appends it to the authored detail. A definition therefore cannot drift away from the source that defines it. Do not copy that wording into `benchmarks.json`.
+- The header hint is on by default and can be turned off with **ⓘ Column help**; the choice is remembered. When the page is opened from disk with no helper, `benchmarks.json` is unavailable, so the toggle is disabled rather than half-working.
+- The page uses **one custom hover panel for everything** (`#tip`), not the browser's default tooltip: keyboard-free, styled, positioned next to the hovered element, and able to show several lines with a source line. Any element with `data-tip` gets it. Use `
+` for line breaks, a line starting `· ` renders as the source line, a line starting `· mine` renders in the highlight colour. Never set `title=` again.
+
+## Layout
+- The three control cards (Filters, Comparison, Display) are collapsible, and the fold state is remembered.
+- Filters and Comparison share a row (`card-row`, two columns) and Display sits below at full width. Below 1000px the row becomes one column.
+
 ## Name matching (read before touching the join)
 One normaliser, plus a second key with the vendor or family prefix removed, because every source spells a model differently (`Claude Opus 5.5 (Max, Default Fallback)`, `openai/gpt-6.1-sol`, `Opus 5.5`, `gpt-6-astra`, `Tencent Hy4`, `Hy4 Preview`).
 

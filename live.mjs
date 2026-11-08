@@ -32,7 +32,6 @@ const TTL = {
   tb: 12 * 3600e3,
   swe: 12 * 3600e3,
 }
-
 // ── cache ────────────────────────────────────────────────────────────────────
 
 const cachePath = (name) => join(CACHE_DIR, `${name}.json`)
@@ -84,13 +83,16 @@ async function fetchAA() {
   const key = aaKey()
   if (!key) throw new Error('no Artificial Analysis key')
   const rows = []
+  let indexVersion = null
   for (let page = 1; page <= 12; page++) {
     const j = await getJson(`${AA_BASE}?page=${page}`, { 'x-api-key': key })
     const data = Array.isArray(j.data) ? j.data : []
     rows.push(...data)
+    indexVersion = j.intelligence_index_version ?? indexVersion
     if (!j.pagination?.has_more || data.length === 0) break
   }
-  return rows
+  // the index version matters: a score without it is not comparable over time
+  return { rows, indexVersion }
 }
 
 // ── OpenRouter ───────────────────────────────────────────────────────────────
@@ -137,18 +139,36 @@ function firstJsonArray(text, needle) {
 async function fetchTB() {
   const html = await getText(TB_URL)
   const rows = firstJsonArray(flightPayload(html), '"rows":[{"id"')
-  return rows
-    .filter((r) => r?.metadata?.model_display?.label && r?.metrics)
-    .map((r) => ({
-      name: r.metadata.model_display.label,
-      agent: r.metadata.agent_display?.label ?? null,
-      effort: r.metadata.reasoning_effort ?? null,
-      // accuracy is a percentage (61.82), display strings carry markup noise
-      score: typeof r.metrics.accuracy === 'number' ? r.metrics.accuracy : null,
-      date: r.metadata.date ?? null,
-      rank: r.rank ?? null,
-    }))
-    .filter((r) => r.score != null)
+
+  // Their own wording for the benchmark comes from the public repo readme. A
+  // failure here only costs the description, never the scores.
+  let tagline = null
+  let tasks = null
+  try {
+    const md = await getText('https://raw.githubusercontent.com/harbor-framework/terminal-bench/main/README.md')
+    const clean = md.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/\*\*/g, '')
+        tagline = clean.split('\n').find((l) => /is a benchmark designed/i.test(l))?.trim() ?? null
+    tasks = md.match(/(\d+)\s+tasks/i)?.[1] ?? null
+  } catch {
+    /* description only */
+  }
+
+  return {
+    tagline,
+    tasks,
+    rows: rows
+      .filter((r) => r?.metadata?.model_display?.label && r?.metrics)
+      .map((r) => ({
+        name: r.metadata.model_display.label,
+        agent: r.metadata.agent_display?.label ?? null,
+        effort: r.metadata.reasoning_effort ?? null,
+        // accuracy is a percentage (61.82), display strings carry markup noise
+        score: typeof r.metrics.accuracy === 'number' ? r.metrics.accuracy : null,
+        date: r.metadata.date ?? null,
+        rank: r.rank ?? null,
+      }))
+      .filter((r) => r.score != null),
+  }
 }
 
 // ── DeepSWE ──────────────────────────────────────────────────────────────────
@@ -162,6 +182,9 @@ async function fetchSWE() {
   if (!rows.length) throw new Error('DeepSWE leaderboard returned no rows')
   return {
     generated_at: j.generated_at ?? null,
+    scope: j.scope ?? null,
+    unit: j.unit ?? null,
+    tasks: j.n_tasks_in_set ?? null,
     rows: rows
       .filter((r) => r?.model && typeof r.pass_at_1 === 'number')
       .map((r) => ({
@@ -260,14 +283,14 @@ export async function getLive({ force = false } = {}) {
   const [aa, or, tb, swe] = await Promise.all([
     source('aa', fetchAA, force),
     source('openrouter', fetchOpenRouter, force),
-    source('tb', fetchTB, force),
-    source('swe', fetchSWE, force),
+    source('tb2', fetchTB, force),
+    source('swe2', fetchSWE, force),
   ])
 
-  const aaRows = aa.data || []
+  const aaRows = aa.data?.rows || []
   const orRows = or.data || []
-  const tbRows = tb.data || []
-  const sweRows = swe.data?.rows || swe.data || []
+  const tbRows = tb.data?.rows || []
+  const sweRows = swe.data?.rows || []
 
   // one catalogue index: a model is reachable by id or display name
   const orByKey = new Map()
@@ -390,6 +413,19 @@ export async function getLive({ force = false } = {}) {
       openrouter: { fetched: or.fetched, error: or.error, stale: or.stale, count: orRows.length },
       tb: { fetched: tb.fetched, error: tb.error, stale: tb.stale, count: tbRows.length },
       swe: { fetched: swe.fetched, error: swe.error, stale: swe.stale, count: sweRows.length, generated_at: swe.data?.generated_at ?? null },
+    },
+    // What each source says about its own metric, in its own words. The page
+    // appends this to the authored description in benchmarks.json, so a
+    // definition can never drift away from the source that defines it.
+    notes: {
+      aa: { index_version: aa.data?.indexVersion ?? null },
+      tb: { tagline: tb.data?.tagline ?? null, tasks: tb.data?.tasks ?? null },
+      swe: {
+        generated_at: swe.data?.generated_at ?? null,
+        tasks: swe.data?.tasks ?? null,
+        scope: swe.data?.scope ?? null,
+        unit: swe.data?.unit ?? null,
+      },
     },
     counts: {
       total: models.length,
